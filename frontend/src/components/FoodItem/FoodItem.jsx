@@ -8,22 +8,27 @@ const FoodItem = ({id, name, price, description, image}) => {
     const [showDetails, setShowDetails] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     
-    // Function to verify and fix image URL if needed
     const getImageUrl = () => {
         if (!image) {
             return 'https://via.placeholder.com/300x200?text=Food+Image';
         }
-        
-        // If it's already a full URL (includes http or https), use it directly
-        if (image.startsWith('http')) {
-            return image;
-        }
-        
-        // For relative paths, make sure they go to the uploads folder
-        if (image.includes('/uploads/')) {
-            return image;
-        } else {
-            return `${url}/uploads/${image}`;
+
+        const imagePath = String(image).trim();
+        try {
+            const parsedImageUrl = new URL(imagePath, `${url}/`);
+            const isAbsoluteUrl = /^https?:\/\//i.test(imagePath);
+
+            if (parsedImageUrl.pathname.includes('/uploads/')) {
+                return `${url.replace(/\/$/, '')}${parsedImageUrl.pathname}`;
+            }
+
+            if (isAbsoluteUrl) {
+                return parsedImageUrl.href;
+            }
+
+            return `${url.replace(/\/$/, '')}/uploads/${imagePath.replace(/^\/+/, '')}`;
+        } catch {
+            return `${url.replace(/\/$/, '')}/uploads/${imagePath.replace(/^\/+/, '')}`;
         }
     };
     const handleAddToCart = () => {

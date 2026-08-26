@@ -71,7 +71,6 @@ const TopDishItem = ({ id, name, description, price, image, rank }) => {
           alt={name} 
           className="top-dish-image" 
           onError={(e) => {
-            console.error("Image failed to load:", image);
             if (e.currentTarget.src !== fallbackImage) {
               e.currentTarget.src = fallbackImage;
             }

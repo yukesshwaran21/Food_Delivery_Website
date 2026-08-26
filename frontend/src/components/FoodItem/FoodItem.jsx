@@ -55,7 +55,6 @@ const FoodItem = ({id, name, price, description, image}) => {
                     src={getImageUrl()} 
                     alt={name} 
                     onError={(e) => {
-                        console.error("Image failed to load:", image);
                         if (e.currentTarget.src !== fallbackImage) {
                             e.currentTarget.src = fallbackImage;
                         }

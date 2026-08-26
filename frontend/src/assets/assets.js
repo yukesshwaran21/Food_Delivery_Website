@@ -85,7 +85,13 @@ export const assets = {
     parcel_icon,
     visa_icon,
     mastercard_icon,
-    paypal_icon
+    paypal_icon,
+    food_1,
+    food_2,
+    food_3,
+    food_4,
+    food_5,
+    food_6
 }
 
 export const menu_list = [

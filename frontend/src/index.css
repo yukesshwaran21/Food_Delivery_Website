@@ -59,10 +59,13 @@
 
 body {
   min-height: 100vh;
+  width: 100%;
   color: var(--color-text-primary);
   font-size: var(--font-xs);
   line-height: var(--line-height-normal);
   font-weight: var(--weight-regular);
+  background: linear-gradient(180deg, #ffffff 0%, #f8faff 52%, #ffffff 100%);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -151,12 +154,40 @@ p {
   padding: 0 1rem;
 }
 
+#root {
+  width: 100%;
+  overflow-x: hidden;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
   }
   100% {
     opacity: 1;
+  }
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(40, 72, 179, 0.35);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -169,7 +200,8 @@ p {
   }
   
   .app {
-    width: 90%;
+    width: 100%;
+    padding: 0;
   }
 }
 
@@ -185,7 +217,7 @@ p {
   }
   
   .app {
-    width: 95%;
-    padding: 0 0.75rem;
+    width: 100%;
+    padding: 0;
   }
 }

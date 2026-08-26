@@ -7,6 +7,7 @@ const FoodItem = ({id, name, price, description, image}) => {
     const {cartItems, addToCart, removeFromCart, url} = useContext(StoreContext);
     const [showDetails, setShowDetails] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
+    const fallbackImage = assets.food_1;
     
     const getImageUrl = () => {
         if (!image) {
@@ -55,7 +56,9 @@ const FoodItem = ({id, name, price, description, image}) => {
                     alt={name} 
                     onError={(e) => {
                         console.error("Image failed to load:", image);
-                        e.target.src = 'https://via.placeholder.com/300x200?text=Food+Image';
+                        if (e.currentTarget.src !== fallbackImage) {
+                            e.currentTarget.src = fallbackImage;
+                        }
                     }}
                 />
                 
@@ -121,7 +124,9 @@ const FoodItem = ({id, name, price, description, image}) => {
                                 src={getImageUrl()} 
                                 alt={name} 
                                 onError={(e) => {
-                                    e.target.src = 'https://via.placeholder.com/500x300?text=Food+Image';
+                                    if (e.currentTarget.src !== fallbackImage) {
+                                        e.currentTarget.src = fallbackImage;
+                                    }
                                 }} 
                             />
                             <div className="modal-info">

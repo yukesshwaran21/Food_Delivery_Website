@@ -4,10 +4,20 @@ import { StoreContext } from '../context/StoreContext';
 import { assets } from '../../assets/assets';
 import FoodDetailsPopup from '../FoodDetailsPopup/FoodDetailsPopup';
 
+const fallbackFoodImages = [
+  assets.food_1,
+  assets.food_2,
+  assets.food_3,
+  assets.food_4,
+  assets.food_5,
+  assets.food_6
+];
+
 const TopDishItem = ({ id, name, description, price, image, rank }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const { cartItems, addToCart, removeFromCart, url } = useContext(StoreContext);
+  const fallbackImage = fallbackFoodImages[(Number(rank) - 1) % fallbackFoodImages.length];
 
   // ✅ Return early if id is missing (prevents runtime errors)
   if (!id) return null;
@@ -62,7 +72,9 @@ const TopDishItem = ({ id, name, description, price, image, rank }) => {
           className="top-dish-image" 
           onError={(e) => {
             console.error("Image failed to load:", image);
-            e.target.src = 'https://via.placeholder.com/300x200?text=Food+Image';
+            if (e.currentTarget.src !== fallbackImage) {
+              e.currentTarget.src = fallbackImage;
+            }
           }}
         />
 

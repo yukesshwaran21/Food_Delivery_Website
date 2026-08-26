@@ -8,8 +8,6 @@ const Navbar = ({setShowLogin}) => {
   const [menu, setMenu] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchActive, setSearchActive] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   
   const profileDropdownRef = useRef(null);
@@ -35,6 +33,20 @@ const Navbar = ({setShowLogin}) => {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
+
+  const handleContactClick = (e) => {
+    e.preventDefault();
+    setMenu('contact-us');
+    setMobileMenuOpen(false);
+
+    if (location.pathname !== '/') {
+      navigate('/#footer');
+      return;
+    }
+
+    scrollToSection('footer');
+    window.history.pushState(null, '', '#footer');
+  };
   
   // Set active menu based on current route
   useEffect(() => {
@@ -48,6 +60,19 @@ const Navbar = ({setShowLogin}) => {
     } else if (location.pathname === '/') {
       // Only set home as active when there's no hash
       setMenu('home');
+    }
+
+    if (location.hash === '#footer') {
+      const scrollToFooter = () => {
+        const footer = document.getElementById('footer');
+        if (footer) {
+          footer.scrollIntoView({ behavior: 'smooth' });
+        }
+      };
+
+      window.requestAnimationFrame(scrollToFooter);
+      const retryTimer = window.setTimeout(scrollToFooter, 250);
+      return () => window.clearTimeout(retryTimer);
     }
   }, [location.pathname, location.hash]);
 
@@ -70,14 +95,6 @@ const Navbar = ({setShowLogin}) => {
     setToken("");
     setProfileDropdownOpen(false);
     navigate("/");
-  }
-  
-  const handleSearch = (e) => {
-    e.preventDefault();
-    // In a real app, implement search functionality here
-    console.log('Searching for:', searchQuery);
-    setSearchActive(false);
-    setSearchQuery('');
   }
   
   return (
@@ -156,16 +173,7 @@ const Navbar = ({setShowLogin}) => {
           <li>
             <a 
               href='#footer' 
-              onClick={(e) => {
-                e.preventDefault();
-                setMenu('contact-us');
-                setMobileMenuOpen(false);
-                // Get the section ID without the # symbol
-                const sectionId = 'footer';
-                scrollToSection(sectionId);
-                // Update URL with hash for bookmarking without page reload
-                window.history.pushState(null, '', `#${sectionId}`);
-              }} 
+              onClick={handleContactClick}
               className={menu === 'contact-us' ? 'active' : ''}
             >
               Contact Us
@@ -206,31 +214,6 @@ const Navbar = ({setShowLogin}) => {
         </ul>
         
         <div className="navbar-right">
-          <div className={`search-container ${searchActive ? 'active' : ''}`}>
-            <button 
-              className="search-icon-btn" 
-              onClick={() => setSearchActive(!searchActive)}
-              aria-label="Search"
-            >
-              <img src={assets.search_icon} alt="Search" />
-            </button>
-            
-            {searchActive && (
-              <form onSubmit={handleSearch} className="search-form">
-                <input
-                  type="text"
-                  placeholder="Search for food..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                />
-                <button type="submit" aria-label="Submit search">
-                  <img src={assets.search_icon} alt="Search" />
-                </button>
-              </form>
-            )}
-          </div>
-          
           <div className="cart-icon-container">
             <Link 
               to='/cart' 

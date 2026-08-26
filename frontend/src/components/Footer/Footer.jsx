@@ -1,68 +1,52 @@
-import React from 'react';
 import './Footer.css';
 import { assets } from '../../assets/assets';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
   return (
-    <footer className="footer">
+    <footer className="footer" id="footer">
       <div className="footer-container">
-        <div className="footer-column about">
-          <img src={assets.logo} alt="Company Logo" className="footer-logo" />
-          <p className="footer-text">Delivering freshness and taste straight to your door.</p>
+        <div className="footer-brand">
+          <Link to="/" className="footer-logo-link" aria-label="EatOnWheels home">
+            <img src={assets.logo} alt="EatOnWheels" className="footer-logo" />
+          </Link>
+          <p className="footer-tagline">Delicious food, delivered to your doorstep.</p>
           <div className="social-icons">
-            <a href="#" aria-label="Facebook"><img src={assets.facebook_icon} alt="Facebook" /></a>
-            <a href="#" aria-label="Twitter"><img src={assets.twitter_icon} alt="Twitter" /></a>
-            <a href="#" aria-label="LinkedIn"><img src={assets.linkedin_icon} alt="LinkedIn" /></a>
+            <button type="button" aria-label="Facebook"><img src={assets.facebook.webp} alt="" /></button>
+            <button type="button" aria-label="Twitter"><img src={assets.twitter_icon} alt="" /></button>
+            <button type="button" aria-label="LinkedIn"><img src={assets.linkedin_icon} alt="" /></button>
           </div>
         </div>
 
-        <div className="footer-column links">
-          <h4>Company</h4>
+        <div className="footer-column">
+          <h2>Explore</h2>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#about-us">About Us</a></li>
-            <li><a href="#delivery">Delivery</a></li>
-            <li><a href="#privacy">Privacy Policy</a></li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/#explore-menu">Menu</Link></li>
+            <li><Link to="/#app-download">Mobile App</Link></li>
+            <li><Link to="/#footer">Contact Us</Link></li>
           </ul>
         </div>
 
-        <div className="footer-column links">
-          <h4>Quick Links</h4>
+        <div className="footer-column">
+          <h2>Useful Links</h2>
           <ul>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="#support">Support</a></li>
-            <li><a href="#terms">Terms of Service</a></li>
-            <li><a href="#careers">Careers</a></li>
+            <li><Link to="/myorders">My Orders</Link></li>
+            <li><Link to="/cart">Cart</Link></li>
           </ul>
         </div>
 
-        <div className="footer-column contact-newsletter">
-          <h4>Get in Touch</h4>
+        <div className="footer-column footer-contact">
+          <h2>Get in Touch</h2>
           <ul>
-            <li><a href="tel:+94765489545">+91 1234567890</a></li>
-            <li><a href="mailto:dulanjalisemarantha93@gmail.com">eatonwheels@gmail.com</a></li>
+            <li><span className="contact-label">Phone</span><a href="tel:+911234567890">+91 1234567890</a></li>
+            <li><span className="contact-label">Email</span><a href="mailto:eatonwheels@gmail.com">eatonwheels@gmail.com</a></li>
           </ul>
-          <div className="newsletter">
-            <h4>Newsletter Signup</h4>
-            <form>
-              <input type="email" placeholder="Your email address" />
-              <button type="submit">Subscribe</button>
-            </form>
-          </div>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <div className="payment-icons">
-          <img src={assets.visa_icon} alt="Visa" />
-          <img src={assets.mastercard_icon} alt="Mastercard" />
-          <img src={assets.paypal_icon} alt="PayPal" />
-        </div>
-        <p className="copyright">
-          © {currentYear} EatOnwheels - All Rights Reserved.
-        </p>
+        <p className="copyright">© 2026 EatOnWheels. All rights reserved.</p>
       </div>
     </footer>
   )

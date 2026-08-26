@@ -151,7 +151,11 @@ p {
   width: 85%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 84px 1rem 0;
+}
+
+[id] {
+  scroll-margin-top: 92px;
 }
 
 #root {
@@ -201,7 +205,7 @@ input:focus-visible {
   
   .app {
     width: 100%;
-    padding: 0;
+    padding: 76px 0 0;
   }
 }
 

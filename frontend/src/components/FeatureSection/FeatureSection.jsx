@@ -1,34 +1,14 @@
-import React, { useState, useEffect } from 'react';
 import './FeatureSection.css';
+import { useInView } from 'react-intersection-observer';
 
 const FeatureSection = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target);
-        }
-      },
-      { threshold: 0.2 }
-    );
-    
-    const sectionElement = document.querySelector('.feature-section');
-    if (sectionElement) {
-      observer.observe(sectionElement);
-    }
-    
-    return () => {
-      if (sectionElement) {
-        observer.unobserve(sectionElement);
-      }
-    };
-  }, []);
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    triggerOnce: false,
+  });
 
   return (
-    <section className={`feature-section ${isVisible ? 'visible' : ''}`} id="why-choose-us">
+    <section className={`feature-section ${inView ? 'visible' : ''}`} id="why-choose-us">
       <div className="feature-container">
         <div className="feature-header">
           <span className="section-tag">OUR BENEFITS</span>
@@ -36,7 +16,7 @@ const FeatureSection = () => {
           <p className="feature-subtitle">Discover why thousands of food lovers trust us for their daily meals</p>
         </div>
         
-        <div className="features-grid">
+        <div className="features-grid" ref={ref}>
           <div className="feature-card">
             <div className="feature-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

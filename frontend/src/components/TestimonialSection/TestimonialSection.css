@@ -1,9 +1,9 @@
 .testimonial-section {
-  padding: 80px 0;
+  padding: 64px 0;
   background-color: #f9f9f9;
   position: relative;
   overflow: hidden;
-  margin: 60px 0;
+  margin: 36px 0;
   border-radius: 20px;
 }
 
@@ -191,8 +191,8 @@
 
 @media (max-width: 768px) {
   .testimonial-section {
-    padding: 60px 0;
-    margin: 40px 0;
+    padding: 48px 0;
+    margin: 28px 0;
   }
   
   .testimonial-header h2 {

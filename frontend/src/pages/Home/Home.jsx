@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Header from '../../components/Header/Header'
-import ExploreMenu from '../../components/ExploreMenu/ExploreMenu'
 import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
 import AppDownload from '../../components/AppDownload/AppDownload'
 import TopDishes from '../../components/TopDishes/TopDishes'
@@ -9,6 +8,8 @@ import FeatureSection from '../../components/FeatureSection/FeatureSection'
 import TestimonialSection from '../../components/TestimonialSection/TestimonialSection'
 import Newsletter from '../../components/Newsletter/Newsletter'
 import ScrollProgress from '../../components/ScrollProgress/ScrollProgress'
+import ContactUs from '../../components/ContactUs/ContactUs'
+import ScrollReveal from '../../components/ScrollReveal/ScrollReveal'
 
 const Home = () => {
   const [category, setCategory] = useState('All')
@@ -48,13 +49,13 @@ const Home = () => {
   return (
     <div className="home-container">
       <ScrollProgress />
-      <Header/>
-      <ExploreMenu category={category} setCategory={setCategory}/>
-      <TopDishes category={category} />
-      <TestimonialSection />
-      <FeatureSection />
-      <Newsletter />
-      <AppDownload id="app-download" />
+      <ScrollReveal className="hero-reveal" replay><Header/></ScrollReveal>
+      <ScrollReveal><TopDishes category={category} setCategory={setCategory} /></ScrollReveal>
+      <ScrollReveal><TestimonialSection /></ScrollReveal>
+      <ScrollReveal><FeatureSection /></ScrollReveal>
+      <ScrollReveal><Newsletter /></ScrollReveal>
+      <ScrollReveal><AppDownload id="app-download" /></ScrollReveal>
+      <ScrollReveal><ContactUs /></ScrollReveal>
       
       {showBackToTop && (
         <button 

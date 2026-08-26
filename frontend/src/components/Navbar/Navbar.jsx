@@ -34,18 +34,18 @@ const Navbar = ({setShowLogin}) => {
     }
   };
 
-  const handleContactClick = (e) => {
+  const handleSectionClick = (e, sectionId, activeMenu) => {
     e.preventDefault();
-    setMenu('contact-us');
+    setMenu(activeMenu);
     setMobileMenuOpen(false);
 
     if (location.pathname !== '/') {
-      navigate('/#footer');
+      navigate(`/#${sectionId}`);
       return;
     }
 
-    scrollToSection('footer');
-    window.history.pushState(null, '', '#footer');
+    scrollToSection(sectionId);
+    window.history.pushState(null, '', `#${sectionId}`);
   };
   
   // Set active menu based on current route
@@ -53,25 +53,25 @@ const Navbar = ({setShowLogin}) => {
     // Handle different route conditions
     if (location.hash === '#app-download') {
       setMenu('mobile-app');
-    } else if (location.hash === '#explore-menu') {
+    } else if (location.hash === '#dishes') {
       setMenu('menu');
-    } else if (location.hash === '#footer') {
+    } else if (location.hash === '#contact') {
       setMenu('contact-us');
     } else if (location.pathname === '/') {
       // Only set home as active when there's no hash
       setMenu('home');
     }
 
-    if (location.hash === '#footer') {
-      const scrollToFooter = () => {
-        const footer = document.getElementById('footer');
-        if (footer) {
-          footer.scrollIntoView({ behavior: 'smooth' });
+    if (location.hash === '#dishes' || location.hash === '#contact') {
+      const scrollToTarget = () => {
+        const target = document.getElementById(location.hash.slice(1));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth' });
         }
       };
 
-      window.requestAnimationFrame(scrollToFooter);
-      const retryTimer = window.setTimeout(scrollToFooter, 250);
+      window.requestAnimationFrame(scrollToTarget);
+      const retryTimer = window.setTimeout(scrollToTarget, 250);
       return () => window.clearTimeout(retryTimer);
     }
   }, [location.pathname, location.hash]);
@@ -136,17 +136,8 @@ const Navbar = ({setShowLogin}) => {
           </li>
           <li>
             <a 
-              href='#explore-menu' 
-              onClick={(e) => {
-                e.preventDefault();
-                setMenu('menu');
-                setMobileMenuOpen(false);
-                // Get the section ID without the # symbol
-                const sectionId = 'explore-menu';
-                scrollToSection(sectionId);
-                // Update URL with hash for bookmarking without page reload
-                window.history.pushState(null, '', `#${sectionId}`);
-              }} 
+              href='#dishes'
+              onClick={(e) => handleSectionClick(e, 'dishes', 'menu')}
               className={menu === 'menu' ? 'active' : ''}
             >
               Menu
@@ -172,8 +163,8 @@ const Navbar = ({setShowLogin}) => {
           </li>
           <li>
             <a 
-              href='#footer' 
-              onClick={handleContactClick}
+              href='#contact'
+              onClick={(e) => handleSectionClick(e, 'contact', 'contact-us')}
               className={menu === 'contact-us' ? 'active' : ''}
             >
               Contact Us

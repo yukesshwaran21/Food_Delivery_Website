@@ -11,8 +11,8 @@
 }
 
 .food-item.hovered {
-    transform: translateY(-5px);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0px 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .food-item-image{

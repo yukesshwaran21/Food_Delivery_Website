@@ -85,9 +85,12 @@ const Cart = () => {
       return 'https://via.placeholder.com/100x100?text=Food';
     }
     
-    // If it's already a full URL (includes http or https), use it directly
     if (image.startsWith('http')) {
-      return image;
+      const parsedImageUrl = new URL(image);
+      if (parsedImageUrl.pathname.includes('/uploads/')) {
+        return `${url}${parsedImageUrl.pathname}`;
+      }
+      return parsedImageUrl.href;
     }
     
     // For relative paths, make sure they go to the uploads folder

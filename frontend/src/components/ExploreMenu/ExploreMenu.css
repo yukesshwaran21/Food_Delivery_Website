@@ -3,8 +3,8 @@
 .explore-menu {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 40px 0;
+  gap: 24px;
+  padding: 30px 0;
   position: relative;
   animation: sectionReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

@@ -1,5 +1,5 @@
 .feature-section {
-  margin: 70px auto;
+  margin: 48px auto;
   padding: 0 20px;
   position: relative;
   overflow: hidden;
@@ -127,7 +127,7 @@
 }
 
 .feature-section.visible .feature-card {
-  animation: featureReveal 0.65s calc(160ms + (var(--feature-order, 0) * 90ms)) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: featureReveal 0.7s calc(var(--feature-order, 0) * 400ms) cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .feature-section.visible .feature-card:nth-child(1) { --feature-order: 0; }
@@ -256,8 +256,8 @@
 }
 
 @keyframes featureReveal {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(35px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 992px) {
@@ -266,13 +266,13 @@
   }
   
   .feature-section {
-    margin: 80px auto;
+    margin: 60px auto;
   }
 }
 
 @media (max-width: 768px) {
   .feature-section {
-    margin: 60px auto;
+    margin: 44px auto;
   }
   
   .feature-container {
@@ -321,6 +321,11 @@
   .feature-button svg {
     transition: none;
     transform: none;
+  }
+
+  .feature-section,
+  .feature-card {
+    opacity: 1;
   }
 
   .feature-section.visible .feature-header,

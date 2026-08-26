@@ -4,8 +4,9 @@ import { StoreContext } from '../context/StoreContext';
 import TopDishItem from './TopDishItem';
 import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
+import CategorySelector from '../CategorySelector/CategorySelector';
 
-const TopDishes = ({ category }) => {
+const TopDishes = ({ category, setCategory }) => {
   const { food_list, url } = useContext(StoreContext);
   const [topDishes, setTopDishes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +64,7 @@ const TopDishes = ({ category }) => {
   }, [category, url]);
 
   return (
-    <section className="top-dishes-section" ref={ref}>
+    <section className="top-dishes-section" id="dishes">
       <div className={`top-dishes-container ${inView ? 'animate-in' : ''}`}>
         <div className="top-dishes-header">
           <h2>
@@ -76,6 +77,7 @@ const TopDishes = ({ category }) => {
               : `Explore our popular ${category.toLowerCase()} selection, handpicked for your enjoyment`}
           </p>
         </div>
+        <CategorySelector category={category} setCategory={setCategory} />
         
         {error ? (
           <div className="error-message">
@@ -93,12 +95,11 @@ const TopDishes = ({ category }) => {
             ))}
           </div>
         ) : topDishes.length > 0 ? (
-          <div className="top-dishes-grid">
+          <div className="top-dishes-grid" ref={ref}>
             {topDishes.map((item, index) => (
               <div 
                 key={item._id} 
                 className="top-dish-wrapper"
-                style={{ animationDelay: `${index * 0.1}s` }}
               >
                 <TopDishItem 
                   id={item._id}

@@ -29,8 +29,7 @@ const addFood = async (req,res) =>{
 const listFood = async (req,res) =>{
     try {
         const foods = await foodModel.find({});
-        const forwardedProtocol = req.get('x-forwarded-proto')?.split(',')[0];
-        const url = `${forwardedProtocol || req.protocol}://${req.get('host')}`;
+        const url = `${process.env.PUBLIC_API_URL || 'https://' + req.get('host')}`.replace(/\/$/, '');
         const foodsWithImageUrl = foods.map(food => ({
             ...food._doc,
             image: `${url}/uploads/${food.image}`

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { contactConnection } from '../config/contactDb.js';
 
 const contactSchema = new mongoose.Schema({
     fullName: { type: String, required: true, trim: true, maxlength: 100 },
@@ -9,6 +10,6 @@ const contactSchema = new mongoose.Schema({
     attachment: { type: String, default: '' }
 }, { timestamps: true });
 
-const contactModel = mongoose.models.contact || mongoose.model('contact', contactSchema);
+const contactModel = contactConnection.models.contact || contactConnection.model('contact', contactSchema);
 
 export default contactModel;

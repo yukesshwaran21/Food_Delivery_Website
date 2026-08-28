@@ -8,10 +8,13 @@ import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import contactRouter from './routes/contactRoute.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 //app config
 const app = express()
 const port = process.env.PORT || 4000
+const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), 'uploads');
 
 // middleware
 app.use(express.json())
@@ -36,7 +39,7 @@ console.log('JWT_SECRET is set:', !!process.env.JWT_SECRET);
 
 // api endpoints
 app.use("/api/food",foodRouter)
-app.use("/uploads",express.static('uploads'))
+app.use("/uploads",express.static(uploadsDirectory))
 app.use('/api/user', userRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/order', orderRouter)

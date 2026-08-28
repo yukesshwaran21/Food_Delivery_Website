@@ -1,5 +1,9 @@
 import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import foodModel from '../models/foodModel.js'
+
+const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'uploads');
 
 //add food item
 
@@ -29,7 +33,9 @@ const addFood = async (req,res) =>{
 const listFood = async (req,res) =>{
     try {
         const foods = await foodModel.find({});
-        const url = `${process.env.PUBLIC_API_URL || 'https://' + req.get('host')}`.replace(/\/$/, '');
+        const forwardedProtocol = req.get('x-forwarded-proto')?.split(',')[0].trim();
+        const protocol = forwardedProtocol || req.protocol;
+        const url = `${process.env.PUBLIC_API_URL || `${protocol}://${req.get('host')}`}`.replace(/\/$/, '');
         const foodsWithImageUrl = foods.map(food => ({
             ...food._doc,
             image: `${url}/uploads/${food.image}`
@@ -46,7 +52,7 @@ const listFood = async (req,res) =>{
 const removeFood = async (req,res)=>{
     try {
         const food = await foodModel.findById(req.body.id);
-        fs.unlink(`uploads/${food.image}`,()=>{})
+        fs.unlink(path.join(uploadsDirectory, food.image),()=>{})
 
         await foodModel.findByIdAndDelete(req.body.id)
         res.json({success:true,message:'Food Removed'})

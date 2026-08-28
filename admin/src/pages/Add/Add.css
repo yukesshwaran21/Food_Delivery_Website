@@ -1,22 +1,26 @@
 /* Modern Add Product Form Styles */
 .add {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  flex: 1;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: clamp(1.5rem, 3vw, 3.5rem) clamp(1rem, 4vw, 4.5rem);
   font-family: 'Poppins', sans-serif;
-  background: #f8fafc;
+  background: radial-gradient(circle at 90% 0%, #eaf4ff 0, transparent 35%), #f8fafc;
   min-height: 100vh;
 }
 
 .add form {
+  width: min(100%, 1180px);
+  margin: 0 auto;
   background: white;
-  padding: 3rem;
+  padding: clamp(1.5rem, 4vw, 3rem);
   border-radius: 20px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
   border: 1px solid #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+  gap: 1.75rem 2.5rem;
 }
 
 /* Image Upload Section */
@@ -26,6 +30,12 @@
   gap: 1rem;
   align-items: center;
   text-align: center;
+  grid-row: span 3;
+  justify-content: center;
+  padding: 1.5rem;
+  border: 1px solid #e2ebf7;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #f8fbff, #eef6ff);
 }
 
 .add-img-upload p {
@@ -171,9 +181,11 @@
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  align-self: flex-start;
+  align-self: center;
   text-transform: uppercase;
   letter-spacing: 0.025em;
+  min-width: 180px;
+  grid-column: 2;
 }
 
 .add-btn:hover:not(:disabled) {
@@ -202,7 +214,12 @@
   .add form {
     padding: 2rem;
     gap: 1.5rem;
+    grid-template-columns: 1fr;
   }
+
+  .add-img-upload { grid-row: auto; }
+
+  .add-btn { grid-column: auto; width: 100%; }
   
   .add-category-price {
     grid-template-columns: 1fr;

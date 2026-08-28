@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+/* eslint-disable react/prop-types */
+import { useCallback, useEffect, useState } from 'react'
 import './List.css'
 import axios from 'axios'
 import { toast } from 'react-toastify';
@@ -7,26 +8,22 @@ const List = ({url}) => {
 
   const [list, setList] = useState([]);
   
-  // Function to verify and fix image URL if needed
   const getImageUrl = (image) => {
-    if (!image) {
-      return 'https://via.placeholder.com/100x100?text=Food';
-    }
-    
-    // If it's already a full URL (includes http or https), use it directly
-    if (image.startsWith('http')) {
-      return image;
-    }
-    
-    // For relative paths, make sure they go to the uploads folder
-    if (image.includes('/uploads/')) {
-      return image;
-    } else {
-      return `${url}/uploads/${image}`;
+    if (!image) return '';
+
+    // Keep uploads on the configured API origin so HTTPS admin pages do not request HTTP images.
+    try {
+      const imageUrl = new URL(image, `${url}/`);
+      if (imageUrl.pathname.includes('/uploads/')) {
+        return `${url.replace(/\/$/, '')}${imageUrl.pathname}`;
+      }
+      return imageUrl.href;
+    } catch {
+      return `${url.replace(/\/$/, '')}/uploads/${image.replace(/^\/+/, '')}`;
     }
   };
 
-  const fetchList = async () =>{
+  const fetchList = useCallback(async () =>{
     const response = await axios.get(`${url}/api/food/list`)
    
     if(response.data.success){
@@ -35,7 +32,7 @@ const List = ({url}) => {
     else{
       toast.error("Error")
     }
-  }
+  }, [url])
 
   const removeFood = async (foodId) =>{
 
@@ -60,7 +57,7 @@ const List = ({url}) => {
 
   useEffect(()=>{
     fetchList();
-  },[])
+  },[fetchList])
   return (
     <div className='list'>
       <p>All Foods List</p>
@@ -79,7 +76,7 @@ const List = ({url}) => {
                 src={getImageUrl(item.image)} 
                 alt={item.name}
                 onError={(e) => {
-                  e.target.src = 'https://via.placeholder.com/100x100?text=Food';
+                  console.error('Food image failed to load', { item, src: e.currentTarget.src });
                 }} 
               />
               <p>{item.name}</p>

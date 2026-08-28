@@ -71,15 +71,6 @@ const Orders = ({url}) => {
               <option value="Delivered">Delivered</option>
               <option value="Cancelled">Cancelled</option>
             </select>
-            {order.trackingHistory && (
-              <button 
-                className="view-tracking-btn"
-                onClick={() => window.open(`/tracking/${order._id}`, '_blank')}
-                title="View detailed tracking history"
-              >
-                View History
-              </button>
-            )}
           </div>
         ))}
       </div>

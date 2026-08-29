@@ -5,7 +5,12 @@ const userSchema = new mongoose.Schema({
     email:{type:String, required:true, unique:true},
     password:{type:String, default: ""},
     cartData:{type:Object, default:{}},
-    googleId: { type: String, default: ""}
+    googleId: { type: String, default: ""},
+    authProvider: {
+        type: String,
+        enum: ["email", "google"],
+        default: "email"
+    }
 },{minimize:false})
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);

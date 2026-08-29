@@ -8,67 +8,88 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const googleLogin = async (req, res) => {
     try {
-
-        const { credential } = req.body;
+        const { credential } = req.body || {};
 
         if (!credential) {
-            return res.json({
+            return res.status(400).json({
                 success: false,
                 message: "Google credential is required"
             });
         }
 
-        // Verify Google token received from frontend
+        if (!process.env.GOOGLE_CLIENT_ID) {
+            return res.status(400).json({
+                success: false,
+                message: "Google login is not configured on the server"
+            });
+        }
+
         const ticket = await client.verifyIdToken({
             idToken: credential,
             audience: process.env.GOOGLE_CLIENT_ID
         });
 
-        // Get Google user details
         const payload = ticket.getPayload();
 
-        const email = payload.email;
-        const name = payload.name;
+        if (!payload || !payload.email) {
+            return res.status(400).json({
+                success: false,
+                message: "Google account email is missing"
+            });
+        }
+
+        if (payload.aud !== process.env.GOOGLE_CLIENT_ID) {
+            return res.status(401).json({
+                success: false,
+                message: "Google token audience is invalid"
+            });
+        }
+
+        const email = payload.email.toLowerCase().trim();
+        const name = payload.name || payload.given_name || "Google User";
         const googleId = payload.sub;
 
-
-        // Check if user already exists
         let user = await userModel.findOne({ email });
 
-
-        // If user does not exist, create a new user
         if (!user) {
-
             user = await userModel.create({
                 name,
                 email,
                 password: "",
-                googleId
+                googleId,
+                authProvider: "google"
             });
+        } else {
+            const updateNeeded =
+                (!user.googleId && googleId) ||
+                (!user.name && name) ||
+                (!user.authProvider || user.authProvider === "email");
+
+            if (updateNeeded) {
+                user.googleId = user.googleId || googleId;
+                user.name = user.name || name;
+                user.authProvider = user.authProvider || "google";
+                await user.save();
+            }
         }
 
+        const token = createToken(user._id);
 
-        // Create your application's JWT
-        const token = jwt.sign(
-            {
-                id: user._id
-            },
-            process.env.JWT_SECRET
-        );
-
-
-        res.json({
+        return res.json({
             success: true,
             token
         });
 
     } catch (error) {
-
         console.error("Google Login Error:", error);
 
-        res.json({
+        const message = error?.message?.includes("audience")
+            ? "Google token audience is invalid"
+            : "Google authentication failed";
+
+        return res.status(401).json({
             success: false,
-            message: "Google authentication failed"
+            message
         });
     }
 };

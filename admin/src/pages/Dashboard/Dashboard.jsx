@@ -9,11 +9,13 @@ import {
   FaBoxOpen,
   FaChartLine,
   FaChevronDown,
+  FaCheckDouble,
   FaClock,
   FaHamburger,
   FaPlus,
   FaRupeeSign,
   FaShoppingBag,
+  FaTrash,
   FaUtensils,
 } from 'react-icons/fa'
 import { assets } from '../../assets/assets'
@@ -74,6 +76,9 @@ const Dashboard = ({ url }) => {
   const [foods, setFoods] = useState([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('Weekly')
+  const [notifications, setNotifications] = useState([])
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [tooltip, setTooltip] = useState(null)
   const [analyticsRef, analyticsVisible] = useReveal()
   const [ordersRef, ordersVisible] = useReveal()
@@ -97,6 +102,58 @@ const Dashboard = ({ url }) => {
     }
     fetchDashboardData()
   }, [url])
+
+  useEffect(() => {
+    let active = true
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get(`${url}/api/notification/list`)
+        if (active && response.data.success) {
+          setNotifications(response.data.data || [])
+          setUnreadCount((response.data.data || []).filter((notification) => !notification.isRead).length)
+        }
+      } catch (error) {
+        // Dashboard data remains usable when notifications are unavailable.
+      }
+    }
+    fetchNotifications()
+    const interval = window.setInterval(fetchNotifications, 15000)
+    return () => {
+      active = false
+      window.clearInterval(interval)
+    }
+  }, [url])
+
+  const markNotificationRead = async (notification) => {
+    if (notification.isRead) return
+    try {
+      await axios.post(`${url}/api/notification/${notification._id}/read`)
+      setNotifications((current) => current.map((item) => item._id === notification._id ? { ...item, isRead: true } : item))
+      setUnreadCount((current) => Math.max(0, current - 1))
+    } catch (error) {
+      toast.error('Unable to update notification')
+    }
+  }
+
+  const markAllNotificationsRead = async () => {
+    try {
+      await axios.post(`${url}/api/notification/read-all`)
+      setNotifications((current) => current.map((notification) => ({ ...notification, isRead: true })))
+      setUnreadCount(0)
+    } catch (error) {
+      toast.error('Unable to update notifications')
+    }
+  }
+
+  const deleteNotification = async (notificationId) => {
+    try {
+      await axios.delete(`${url}/api/notification/${notificationId}`)
+      setNotifications((current) => current.filter((notification) => notification._id !== notificationId))
+      setUnreadCount((current) => notifications.find((notification) => notification._id === notificationId && !notification.isRead) ? Math.max(0, current - 1) : current)
+    } catch (error) {
+      toast.error('Unable to delete notification')
+    }
+  }
 
   const metrics = useMemo(() => ({
     totalOrders: orders.length,
@@ -172,7 +229,13 @@ const Dashboard = ({ url }) => {
         </div>
         <div className="header-tools">
           <span className="date-chip">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</span>
-          <button className="notification-button" aria-label="Notifications"><FaBell /><span /></button>
+          <div className="notification-wrap">
+            <button className="notification-button" aria-label="Notifications" onClick={() => setNotificationsOpen((current) => !current)}><FaBell />{unreadCount > 0 && <span className="unread-count">{unreadCount > 99 ? '99+' : unreadCount}</span>}</button>
+            {notificationsOpen && <div className="notification-panel" role="dialog" aria-label="Notifications">
+              <div className="notification-panel-heading"><strong>Notifications</strong>{unreadCount > 0 && <button onClick={markAllNotificationsRead}><FaCheckDouble /> Mark all as read</button>}</div>
+              {notifications.length === 0 ? <p className="notification-empty">No notifications yet</p> : <div className="notification-list">{notifications.map((notification) => <div className={`notification-item ${notification.isRead ? '' : 'unread'}`} key={notification._id} onClick={() => markNotificationRead(notification)}><div><strong>{notification.title}</strong><p>{notification.message}</p><span>{notification.customerName} · {formatCurrency(notification.amount)} · {new Date(notification.createdAt).toLocaleString()}</span></div><button className="notification-delete" aria-label="Delete notification" onClick={(event) => { event.stopPropagation(); deleteNotification(notification._id) }}><FaTrash /></button></div>)}</div>}
+            </div>}
+          </div>
           <img className="dashboard-avatar" src={assets.profile_image} alt="Admin profile" />
         </div>
       </header>

@@ -8,91 +8,113 @@ const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 const googleLogin = async (req, res) => {
     try {
-        const { credential } = req.body || {};
+
+        const { credential } = req.body
 
         if (!credential) {
             return res.status(400).json({
                 success: false,
                 message: "Google credential is required"
-            });
+            })
         }
 
         if (!process.env.GOOGLE_CLIENT_ID) {
-            return res.status(400).json({
+            return res.status(500).json({
                 success: false,
-                message: "Google login is not configured on the server"
-            });
+                message: "Google Client ID is not configured"
+            })
         }
 
         const ticket = await client.verifyIdToken({
             idToken: credential,
             audience: process.env.GOOGLE_CLIENT_ID
-        });
+        })
 
-        const payload = ticket.getPayload();
+        const payload = ticket.getPayload()
 
-        if (!payload || !payload.email) {
-            return res.status(400).json({
-                success: false,
-                message: "Google account email is missing"
-            });
-        }
-
-        if (payload.aud !== process.env.GOOGLE_CLIENT_ID) {
+        if (!payload) {
             return res.status(401).json({
                 success: false,
-                message: "Google token audience is invalid"
-            });
+                message: "Invalid Google token"
+            })
         }
 
-        const email = payload.email.toLowerCase().trim();
-        const name = payload.name || payload.given_name || "Google User";
-        const googleId = payload.sub;
+        const {
+            sub: googleId,
+            email,
+            name
+        } = payload
 
-        let user = await userModel.findOne({ email });
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Google account email not available"
+            })
+        }
+
+        const normalizedEmail =
+            email.toLowerCase().trim()
+
+        let user =
+            await userModel.findOne({
+                email: normalizedEmail
+            })
 
         if (!user) {
-            user = await userModel.create({
-                name,
-                email,
-                password: "",
-                googleId,
-                authProvider: "google"
-            });
-        } else {
-            const updateNeeded =
-                (!user.googleId && googleId) ||
-                (!user.name && name) ||
-                (!user.authProvider || user.authProvider === "email");
 
-            if (updateNeeded) {
-                user.googleId = user.googleId || googleId;
-                user.name = user.name || name;
-                user.authProvider = user.authProvider || "google";
-                await user.save();
+            user =
+                await userModel.create({
+                    name: name || "Google User",
+                    email: normalizedEmail,
+                    password: "",
+                    googleId,
+                    authProvider: "google",
+                    cartData: {}
+                })
+
+        } else {
+
+            let changed = false
+
+            if (!user.googleId) {
+                user.googleId = googleId
+                changed = true
+            }
+
+            if (
+                user.authProvider !== "google" &&
+                !user.password
+            ) {
+                user.authProvider = "google"
+                changed = true
+            }
+
+            if (changed) {
+                await user.save()
             }
         }
 
-        const token = createToken(user._id);
+        const token =
+            createToken(user._id)
 
         return res.json({
             success: true,
             token
-        });
+        })
 
     } catch (error) {
-        console.error("Google Login Error:", error);
 
-        const message = error?.message?.includes("audience")
-            ? "Google token audience is invalid"
-            : "Google authentication failed";
+        console.error(
+            "Google Login Error:",
+            error
+        )
 
         return res.status(401).json({
             success: false,
-            message
-        });
+            message: "Google authentication failed"
+        })
     }
-};
+}
 
 //login user
 const loginUser = async (req,res) =>{

@@ -9,53 +9,24 @@ const StoreContextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
     const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-    console.log("CURRENT API URL:", url);
     const [token,setToken] = useState("");
 
     const [food_list, setFoodList] = useState([]);
 
     const addToCart = async (itemId) => {
-    console.log("ADD TO CART CALLED:", itemId);
-
-    const key = String(itemId);
-
-    setCartItems(prev => {
-        const updatedCart = {
-            ...prev,
-            [key]: (prev && prev[key]) ? prev[key] + 1 : 1
-        };
-
-        console.log("UPDATED CART:", updatedCart);
-
-        if (!token) {
-            localStorage.setItem(
-                'guest_cart',
-                JSON.stringify(updatedCart)
-            );
-        }
-
-        return updatedCart;
-    });
-
-    if (token) {
-        try {
-            const response = await axios.post(
-                url + '/api/cart/add',
-                { itemId },
-                { headers: { token } }
-            );
-
-            console.log("CART API RESPONSE:", response.data);
-
+        const key = String(itemId);
+        setCartItems(prev => {
+            const updatedCart = { ...prev, [key]: (prev && prev[key]) ? prev[key] + 1 : 1 };
+            if (!token) {
+                localStorage.setItem('guest_cart', JSON.stringify(updatedCart));
+            }
+            return updatedCart;
+        });
+        if(token){
+            await axios.post(url+'/api/cart/add',{itemId},{headers:{token}})
             await loadCartData(token);
-        } catch (error) {
-            console.error(
-                "ADD TO CART API ERROR:",
-                error.response?.data || error.message
-            );
         }
     }
-}
 
     const removeFromCart = async (itemId) => {
         const key = String(itemId);

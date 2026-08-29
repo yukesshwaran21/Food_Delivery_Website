@@ -1,6 +1,5 @@
 import fs from 'fs';
 import contactModel from '../models/contactModel.js';
-import { contactConnection } from '../config/contactDb.js';
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const phonePattern = /^[+\d][\d\s().-]{7,}$/;
@@ -20,11 +19,6 @@ const submitContact = async (req, res) => {
     }
 
     try {
-        if (contactConnection.readyState !== 1) {
-            if (req.file) fs.unlink(req.file.path, () => {});
-            return res.status(503).json({ success: false, message: 'Contact service is temporarily unavailable.' });
-        }
-
         const contact = new contactModel({
             fullName: fullName.trim(),
             email: email.trim(),

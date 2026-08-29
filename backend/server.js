@@ -2,12 +2,12 @@ import 'dotenv/config';
 import express from 'express'
 import cors from 'cors'
 import { connectDB } from './config/db.js'
-import { connectContactDB } from './config/contactDb.js'
 import foodRouter from './routes/foodRoute.js'
 import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import contactRouter from './routes/contactRoute.js';
+import notificationRouter from './routes/notificationRoute.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -32,7 +32,6 @@ app.options('*', cors());
 
 //db connection
 connectDB();
-connectContactDB().catch(() => process.exit(1));
 
 // Debug environment variables
 console.log('JWT_SECRET is set:', !!process.env.JWT_SECRET);
@@ -44,6 +43,7 @@ app.use('/api/user', userRouter)
 app.use('/api/cart', cartRouter)
 app.use('/api/order', orderRouter)
 app.use('/api/contact', contactRouter)
+app.use('/api/notification', notificationRouter)
 
 app.get("/",(req,res)=>{
         res.send("API working")

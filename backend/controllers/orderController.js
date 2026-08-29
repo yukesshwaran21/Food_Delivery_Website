@@ -1,5 +1,6 @@
 import orderModel from './../models/orderModel.js';
 import userModel from './../models/userModel.js';
+import notificationModel from './../models/notificationModel.js';
 import Stripe from "stripe"
 
 const stripe =  new Stripe(process.env.STRIPE_SECRET_KEY)
@@ -17,6 +18,22 @@ const placeOrder = async (req, res) =>{
         })
 
         await newOrder.save();
+        const customerName = `${req.body.address?.firstName || ''} ${req.body.address?.lastName || ''}`.trim() || 'Guest';
+        await notificationModel.updateOne(
+            { type: 'new-order', orderId: newOrder._id },
+            {
+                $setOnInsert: {
+                    type: 'new-order',
+                    title: 'New Order Received',
+                    message: `A new order has been placed by ${customerName}.`,
+                    orderId: newOrder._id,
+                    customerName,
+                    amount: newOrder.amount,
+                    isRead: false
+                }
+            },
+            { upsert: true }
+        );
         await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
 
         const line_items = req.body.items.map((item)=>({
@@ -62,6 +79,7 @@ const verifyOrder = async (req, res) =>{
             await orderModel.findByIdAndUpdate(orderId,{payment:true});
             res.json({success:true, message:"Paid"})
         }else{
+            await notificationModel.findOneAndDelete({ orderId });
             await orderModel.findByIdAndDelete(orderId);
             res.json({success:false, message:"Not Paid"})
         }

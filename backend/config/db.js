@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
 export const connectDB = async () =>{
-    await mongoose.connect('mongodb+srv://krishnakumarkd2005:shanmugam.C2005@cluster0.lwxqel8.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(()=>{
+    const mongoUri = process.env.CONTACT_MONGODB_URI;
+    if (!mongoUri) {
+       throw new Error('CONTACT_MONGODB_URI is not configured.');
+    }
+    await mongoose.connect(mongoUri).then(()=>{
        console.log('DB connected') ;
     })
 }

@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useRef } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
 import { GoogleLogin } from '@react-oauth/google'
 import './LoginPopup.css'
 import { assets } from '../../assets/assets'
@@ -7,7 +8,27 @@ import axios from 'axios'
 
 const LoginPopup = ({ setShowLogin }) => {
 
+    const getCaptchaBypassStatus = () => {
+        const captchaVerifiedUntil = localStorage.getItem('captchaVerifiedUntil')
+
+        if (!captchaVerifiedUntil) {
+            return false
+        }
+
+        const expiry = Number(captchaVerifiedUntil)
+
+        if (!expiry || Date.now() >= expiry) {
+            localStorage.removeItem('captchaVerifiedUntil')
+            return false
+        }
+
+        return true
+    }
+
     const { url, setToken } = useContext(StoreContext)
+    const recaptchaRef = useRef(null)
+    const [captchaToken, setCaptchaToken] = useState(null)
+    const [captchaBypassActive, setCaptchaBypassActive] = useState(() => getCaptchaBypassStatus())
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
     const [currentState, setCurrentState] = useState('Login')
@@ -29,6 +50,20 @@ const LoginPopup = ({ setShowLogin }) => {
         setIsLoading(true)
         setError('')
 
+        const bypassActive = getCaptchaBypassStatus()
+        const requestPayload = {
+            ...data,
+            ...(bypassActive
+                ? { captchaVerifiedUntil: Number(localStorage.getItem('captchaVerifiedUntil')) }
+                : { captchaToken })
+        }
+
+        if (!bypassActive && !captchaToken) {
+            setError('Please complete the CAPTCHA')
+            setIsLoading(false)
+            return
+        }
+
         let newUrl = url;
         if (currentState === 'Login') {
             newUrl += "/api/user/login"
@@ -37,22 +72,42 @@ const LoginPopup = ({ setShowLogin }) => {
         }
 
         try {
-            const response = await axios.post(newUrl, data);
+            const response = await axios.post(newUrl, requestPayload);
 
             if (response.data.success) {
                 setToken(response.data.token);
                 localStorage.setItem("token", response.data.token)
+
+                if (!bypassActive && captchaToken) {
+                    const verifiedUntil = Date.now() + 12 * 60 * 60 * 1000
+                    localStorage.setItem('captchaVerifiedUntil', String(verifiedUntil))
+                    setCaptchaBypassActive(true)
+                }
+
+                setCaptchaToken(null)
+                recaptchaRef.current?.reset()
                 setShowLogin(false);
             } else {
                 setError(response.data.message || "Something went wrong");
+                setCaptchaToken(null)
+                recaptchaRef.current?.reset()
             }
         } catch (err) {
             console.error(err);
             setError(err.response?.data?.message || "An error occurred. Please try again.");
+            setCaptchaToken(null)
+            recaptchaRef.current?.reset()
         } finally {
             setIsLoading(false)
         }
     }
+
+    useEffect(() => {
+        if (Date.now() >= Number(localStorage.getItem('captchaVerifiedUntil'))) {
+            localStorage.removeItem('captchaVerifiedUntil')
+        }
+        setCaptchaBypassActive(getCaptchaBypassStatus())
+    }, [])
 
     // Handle escape key to close popup
     useEffect(() => {
@@ -161,6 +216,20 @@ const LoginPopup = ({ setShowLogin }) => {
                 </div>
 
                 {error && <p style={{ color: '#EF4444', fontSize: '14px', margin: '-5px 0 0', textAlign: 'center' }}>{error}</p>}
+
+                {!captchaBypassActive && (
+                    <ReCAPTCHA
+                        ref={recaptchaRef}
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={(token) => {
+                            setCaptchaToken(token)
+                            setError('')
+                        }}
+                        onExpired={() => {
+                            setCaptchaToken(null)
+                        }}
+                    />
+                )}
 
                 <button type="submit" disabled={isLoading}>
                     {isLoading ? 'Please wait...' : (currentState === 'Sign Up' ? 'Create Account' : 'Login')}

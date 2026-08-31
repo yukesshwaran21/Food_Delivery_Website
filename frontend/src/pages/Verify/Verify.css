@@ -1,6 +1,8 @@
 .verify{
     min-height: 60vh;
     display: grid;
+    place-items: center;
+    text-align: center;
 }
 
 .verify .spinner{
@@ -13,8 +15,73 @@
     animation: rotate 1s infinite;
 }
 
+.verify-status {
+    margin-top: 16px;
+    color: #555;
+    font-size: 16px;
+}
+
 @keyframes rotate{
     100%{
         transform: rotate(360deg);
     }
+}
+
+.verify-success, .verify-failed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    animation: fadeIn 0.5s ease;
+}
+
+.success-checkmark {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #4caf50;
+    color: white;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.4s ease;
+}
+
+.failed-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: tomato;
+    color: white;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: scaleIn 0.4s ease;
+}
+
+.verify-success h2 {
+    color: #4caf50;
+    margin: 0;
+}
+
+.verify-failed h2 {
+    color: tomato;
+    margin: 0;
+}
+
+.verify-redirect {
+    color: #999;
+    font-size: 14px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0); }
+    to { transform: scale(1); }
 }

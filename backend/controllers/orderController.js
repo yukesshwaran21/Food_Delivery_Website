@@ -3,21 +3,23 @@ import userModel from './../models/userModel.js';
 import notificationModel from './../models/notificationModel.js';
 import Stripe from "stripe"
 
-const stripe =  new Stripe(process.env.STRIPE_SECRET_KEY)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // Placing user order for frontend
 const placeOrder = async (req, res) =>{
-
-    const frontend_url = 'https://food-delivery-website-3-tq77.onrender.com';
     try {
+        console.log("CREATING ORDER FOR USER:", req.body.userId);
         const newOrder = new orderModel({
             userId: req.body.userId,
             items: req.body.items,
-            amount:req.body.amount,
+            amount: req.body.amount,
             address: req.body.address
         })
 
         await newOrder.save();
+    console.log("ORDER CREATED:", newOrder);
+        console.log(`Order created: ${newOrder._id}`);
         const customerName = `${req.body.address?.firstName || ''} ${req.body.address?.lastName || ''}`.trim() || 'Guest';
         await notificationModel.updateOne(
             { type: 'new-order', orderId: newOrder._id },
@@ -34,69 +36,108 @@ const placeOrder = async (req, res) =>{
             },
             { upsert: true }
         );
-        await userModel.findByIdAndUpdate(req.body.userId,{cartData:{}});
 
-        const line_items = req.body.items.map((item)=>({
-            price_data :{
+        const line_items = req.body.items.map((item) => ({
+            price_data: {
                 currency: "lkr",
-                product_data:{
+                product_data: {
                     name: item.name
                 },
-                unit_amount:item.price*100*300
+                unit_amount: item.price * 100 * 300
             },
             quantity: item.quantity
         }))
 
         line_items.push({
-            price_data :{
-                currency:"lkr",
-                product_data:{
-                    name:"Delivery Charges"
+            price_data: {
+                currency: "lkr",
+                product_data: {
+                    name: "Delivery Charges"
                 },
-                unit_amount:2*100*80
+                unit_amount: 2 * 100 * 80
             },
-            quantity:1
+            quantity: 1
         })
 
         const session = await stripe.checkout.sessions.create({
-            line_items:line_items,
-            mode:'payment',
-            success_url:`${frontend_url}/verify?success=true&orderId=${newOrder._id}`,
-            cancel_url:`${frontend_url}/verify?success=false&orderId=${newOrder._id}`
+            line_items,
+            mode: 'payment',
+            client_reference_id: newOrder._id.toString(),
+            metadata: { orderId: newOrder._id.toString() },
+            success_url: `${frontendUrl}/verify?session_id={CHECKOUT_SESSION_ID}&orderId=${newOrder._id}`,
+            cancel_url: `${frontendUrl}/verify?orderId=${newOrder._id}`
         })
 
-        res.json({success:true, session_url:session.url})
+        res.json({ success: true, session_url: session.url })
     } catch (error) {
-        console.log(error)
-        res.json({success:false, message:"Error"})
+        console.error("ORDER ERROR:", error);
+        return res.status(500).json({ success: false, message: error.message });
     }
 }
 
-const verifyOrder = async (req, res) =>{
-    const {orderId, success} = req.body;
+const verifyOrder = async (req, res) => {
+    const { orderId, sessionId } = req.body;
+
     try {
-        if(success=='true'){
-            await orderModel.findByIdAndUpdate(orderId,{payment:true});
-            res.json({success:true, message:"Paid"})
-        }else{
-            await notificationModel.findOneAndDelete({ orderId });
-            await orderModel.findByIdAndDelete(orderId);
-            res.json({success:false, message:"Not Paid"})
+        const order = await orderModel.findById(orderId);
+
+        if (!order) {
+            return res.status(404).json({ success: false, message: 'Order not found' });
         }
+
+        if (order.userId !== req.body.userId) {
+            return res.status(403).json({ success: false, message: 'Not authorized' });
+        }
+
+        if (!sessionId) {
+            return res.json({ success: false, message: 'Payment session is missing' });
+        }
+
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        const sessionOrderId = session.client_reference_id || session.metadata?.orderId;
+        if (sessionOrderId !== orderId || session.payment_status !== 'paid') {
+            return res.json({ success: false, message: 'Payment is not completed' });
+        }
+
+        order.payment = true;
+        order.status = order.status && order.status !== 'Pending' ? order.status : 'Food Processing';
+        await order.save();
+        await userModel.findByIdAndUpdate(req.body.userId, { cartData: {} });
+
+        return res.json({ success: true, message: 'Paid', data: { orderId } })
     } catch (error) {
-        console.log(error)
-        res.json({success:false, message:"Error"})
+        console.error("PAYMENT VERIFICATION ERROR:", error);
+        return res.status(500).json({ success: false, message: error.message })
     }
 }
 
 // user orders for frontend
 const userOrders = async (req,res) => {
     try {
-        const orders = await orderModel.find({userId:req.body.userId})
-        res.json({success:true, data:orders})
+        console.log("USER ORDERS REQUEST:", req.body);
+        console.log("USER ID:", req.body.userId);
+
+        if (!req.body.userId) {
+            return res.status(401).json({
+                success: false,
+                message: "User ID not found"
+            });
+        }
+
+        const orders = await orderModel
+            .find({ userId: req.body.userId })
+            .sort({ createdAt: -1 });
+
+        return res.json({
+            success: true,
+            data: orders || []
+        });
     } catch (error) {
-        console.log(error)
-        res.json({success:false, message:"Error"})
+        console.error("USER ORDERS BACKEND ERROR:", error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
     }
 }
 
@@ -104,6 +145,7 @@ const userOrders = async (req,res) => {
 const listOrders = async (req,res) =>{
    try {
     const orders = await orderModel.find({});
+    console.log(`Admin order list returned ${orders.length} orders`);
     res.json({success:true, data:orders})
    } catch (error) {
         console.log(error)

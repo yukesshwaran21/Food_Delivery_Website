@@ -1,6 +1,6 @@
 import React from 'react'
 import './Orders.css'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import { useEffect } from 'react';
@@ -10,7 +10,7 @@ const Orders = ({url}) => {
 
   const [orders, setOrders] = useState([])
 
-  const fetchAllOrders = async () =>{
+  const fetchAllOrders = useCallback(async () =>{
     const response = await axios.get(url+"/api/order/list");
     if(response.data.success){
       setOrders(response.data.data);
@@ -18,7 +18,7 @@ const Orders = ({url}) => {
     }else{
       toast.error("Error")
     }
-  }
+  },[url])
 
   const statusHandler = async (event,orderId) =>{
     const response = await axios.post(url+"/api/order/status",{
@@ -31,8 +31,15 @@ const Orders = ({url}) => {
   }
 
   useEffect(()=>{
-    fetchAllOrders()
-  },[])
+    fetchAllOrders();
+    const refreshInterval = setInterval(fetchAllOrders, 15000);
+    window.addEventListener('focus', fetchAllOrders);
+
+    return () => {
+      clearInterval(refreshInterval);
+      window.removeEventListener('focus', fetchAllOrders);
+    };
+  },[fetchAllOrders])
   return (
     <div className='order'>
       <h3>Order Page</h3>

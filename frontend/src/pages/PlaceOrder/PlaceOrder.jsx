@@ -3,9 +3,30 @@ import './PlaceOrder.css'
 import { StoreContext } from '../../components/context/StoreContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { assets } from '../../assets/assets';
+
+const resolveImageUrl = (image, apiBaseUrl, fallback) => {
+  if (!image) return fallback;
+  const imageValue = String(image).trim();
+  if (!imageValue) return fallback;
+  if (/^https?:\/\//i.test(imageValue)) {
+    try {
+      const parsed = new URL(imageValue);
+      if (parsed.pathname.includes('/uploads/')) {
+        return `${apiBaseUrl}${parsed.pathname}`;
+      }
+      return parsed.href;
+    } catch {
+      return imageValue;
+    }
+  }
+  const normalized = imageValue.replace(/^\/+/, '').replace(/^uploads\/+/, '');
+  return `${apiBaseUrl}/uploads/${normalized}`;
+};
 
 const PlaceOrder = () => {
   const {getTotalCartAmount, token, food_list, cartItems, url} = useContext(StoreContext);
+  const food1Fallback = assets.food_1;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [orderSummaryOpen, setOrderSummaryOpen] = useState(false);
@@ -344,10 +365,10 @@ const PlaceOrder = () => {
                 <div className="item-image-container">
                   <img 
                     className="item-image" 
-                    src={item.image}
+                    src={resolveImageUrl(item.image, url, food1Fallback)}
                     alt={item.name}
                     onError={(e) => {
-                      e.target.src = 'https://via.placeholder.com/50x50?text=Food';
+                      e.target.src = food1Fallback;
                     }}
                   />
                   <div className="item-quantity">{cartItems[item._id]}</div>

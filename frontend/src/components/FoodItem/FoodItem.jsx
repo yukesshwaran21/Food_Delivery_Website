@@ -3,35 +3,35 @@ import './FoodItem.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from '../context/StoreContext';
 
+const resolveImageUrl = (image, apiBaseUrl) => {
+    if (!image) return assets.food_1;
+
+    const imageValue = String(image).trim();
+    if (!imageValue) return assets.food_1;
+
+    if (/^https?:\/\//i.test(imageValue)) {
+        try {
+            const parsed = new URL(imageValue);
+            if (parsed.pathname.includes('/uploads/')) {
+                return `${apiBaseUrl}${parsed.pathname}`;
+            }
+            return parsed.href;
+        } catch {
+            return imageValue;
+        }
+    }
+
+    const normalized = imageValue.replace(/^\/+/, '').replace(/^uploads\/+/, '');
+    return `${apiBaseUrl}/uploads/${normalized}`;
+};
+
 const FoodItem = ({id, name, price, description, image}) => {
     const {cartItems, addToCart, removeFromCart, url} = useContext(StoreContext);
     const [showDetails, setShowDetails] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const fallbackImage = assets.food_1;
     
-    const getImageUrl = () => {
-        if (!image) {
-            return 'https://via.placeholder.com/300x200?text=Food+Image';
-        }
-
-        const imagePath = String(image).trim();
-        try {
-            const parsedImageUrl = new URL(imagePath, `${url}/`);
-            const isAbsoluteUrl = /^https?:\/\//i.test(imagePath);
-
-            if (parsedImageUrl.pathname.includes('/uploads/')) {
-                return `${url.replace(/\/$/, '')}${parsedImageUrl.pathname}`;
-            }
-
-            if (isAbsoluteUrl) {
-                return parsedImageUrl.href;
-            }
-
-            return `${url.replace(/\/$/, '')}/uploads/${imagePath.replace(/^\/+/, '')}`;
-        } catch {
-            return `${url.replace(/\/$/, '')}/uploads/${imagePath.replace(/^\/+/, '')}`;
-        }
-    };
+    const getImageUrl = () => resolveImageUrl(image, url);
     const handleAddToCart = () => {
         addToCart(id);
         // Show toast notification (in a real implementation)

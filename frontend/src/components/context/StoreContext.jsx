@@ -3,13 +3,19 @@ import axios from 'axios'
 
 export const StoreContext = createContext(null)
 
+const getApiBaseUrl = () => {
+    const configuredUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+    return configuredUrl || 'http://localhost:4000';
+};
+
 // Configure axios defaults
 axios.defaults.withCredentials = true;
+
 const StoreContextProvider = (props) => {
 
     const [cartItems, setCartItems] = useState({});
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
-    const [token,setToken] = useState("");
+    const url = getApiBaseUrl();
+    const [token, setToken] = useState("");
 
     const [food_list, setFoodList] = useState([]);
 
@@ -22,9 +28,16 @@ const StoreContextProvider = (props) => {
             }
             return updatedCart;
         });
-        if(token){
-            await axios.post(url+'/api/cart/add',{itemId},{headers:{token}})
-            await loadCartData(token);
+        if (token) {
+            try {
+                await axios.post(url + '/api/cart/add', { itemId }, { headers: { token } })
+                await loadCartData(token);
+            } catch (error) {
+                if (error?.response?.status === 401) {
+                    localStorage.removeItem('token');
+                    setToken('');
+                }
+            }
         }
     }
 
@@ -38,9 +51,16 @@ const StoreContextProvider = (props) => {
             }
             return updatedCart;
         });
-        if(token){
-            await axios.post(url+'/api/cart/remove',{itemId},{headers:{token}})
-            await loadCartData(token);
+        if (token) {
+            try {
+                await axios.post(url + '/api/cart/remove', { itemId }, { headers: { token } })
+                await loadCartData(token);
+            } catch (error) {
+                if (error?.response?.status === 401) {
+                    localStorage.removeItem('token');
+                    setToken('');
+                }
+            }
         }
     }
 
@@ -72,13 +92,22 @@ const StoreContextProvider = (props) => {
         setFoodList(response.data.data)
     }
 
-    const loadCartData = async (token) =>{
+    const loadCartData = async (tkn) => {
         try {
-            const response = await axios.post(url+"/api/cart/get",{},{headers:{token}})
+            const response = await axios.post(url + "/api/cart/get", {}, { headers: { token: tkn } })
             setCartItems(response.data.cartData || {});
         } catch (error) {
-            console.error('Error loading cart data:', error);
-            setCartItems({});
+            // If the stored token is invalid/expired (401), clear it so the user
+            // can still browse and will just need to log in again.
+            if (error?.response?.status === 401) {
+                console.warn('Stored token is invalid or expired — clearing session.');
+                localStorage.removeItem('token');
+                setToken('');
+                setCartItems({});
+            } else {
+                console.error('Error loading cart data:', error);
+                setCartItems({});
+            }
         }
     }
 
@@ -109,7 +138,8 @@ const StoreContextProvider = (props) => {
         getTotalCartItems,
         url,
         token,
-        setToken
+        setToken,
+        getApiBaseUrl
     }
 
     return (

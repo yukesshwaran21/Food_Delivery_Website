@@ -35,7 +35,7 @@ const TopDishItem = ({ id, name, description, price, image, rank }) => {
   
   const getImageUrl = () => {
     if (!image) {
-      return 'https://via.placeholder.com/300x200?text=Food+Image';
+      return fallbackImage;
     }
 
     const imagePath = String(image).trim();

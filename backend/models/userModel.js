@@ -11,7 +11,10 @@ const userSchema = new mongoose.Schema({
         enum: ["email", "google"],
         default: "email"
     }
-},{minimize:false})
+},{
+    minimize:false,
+    timestamps: true
+})
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);
 

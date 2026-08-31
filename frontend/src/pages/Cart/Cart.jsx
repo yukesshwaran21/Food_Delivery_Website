@@ -1,10 +1,35 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import './Cart.css';
 import './cart-title.css';
 import './cart-mobile.css';
 import './discount-notification.css';
 import { StoreContext } from '../../components/context/StoreContext';
 import { useNavigate } from 'react-router-dom';
+import { assets } from '../../assets/assets';
+
+const FALLBACK_IMG = assets.food_1;
+
+const resolveImageUrl = (image, apiBaseUrl) => {
+  if (!image) return FALLBACK_IMG;
+
+  const imageValue = String(image).trim();
+  if (!imageValue) return FALLBACK_IMG;
+
+  if (/^https?:\/\//i.test(imageValue)) {
+    try {
+      const parsed = new URL(imageValue);
+      if (parsed.pathname.includes('/uploads/')) {
+        return `${apiBaseUrl}${parsed.pathname}`;
+      }
+      return parsed.href;
+    } catch {
+      return imageValue;
+    }
+  }
+
+  const normalized = imageValue.replace(/^\/+/, '').replace(/^uploads\/+/, '');
+  return `${apiBaseUrl}/uploads/${normalized}`;
+};
 
 const Cart = () => {
   const { cartItems = {}, food_list = [], removeFromCart, addToCart, getTotalCartAmount, getTotalCartItems, url } = useContext(StoreContext);
@@ -79,27 +104,7 @@ const Cart = () => {
     setShowNotification(false);
   };
   
-  // Function to verify and fix image URL if needed
-  const getImageUrl = (image) => {
-    if (!image) {
-      return 'https://via.placeholder.com/100x100?text=Food';
-    }
-    
-    if (image.startsWith('http')) {
-      const parsedImageUrl = new URL(image);
-      if (parsedImageUrl.pathname.includes('/uploads/')) {
-        return `${url}${parsedImageUrl.pathname}`;
-      }
-      return parsedImageUrl.href;
-    }
-    
-    // For relative paths, make sure they go to the uploads folder
-    if (image.includes('/uploads/')) {
-      return image;
-    } else {
-      return `${url}/uploads/${image}`;
-    }
-  };
+  const getImageUrl = (image) => resolveImageUrl(image, url);
 
   return (
     <div className='cart-page'>
@@ -159,7 +164,7 @@ const Cart = () => {
                           src={getImageUrl(item.image)} 
                           alt={item.name} 
                           onError={(e) => {
-                            e.target.src = 'https://via.placeholder.com/100x100?text=Food';
+                            e.target.src = FALLBACK_IMG;
                           }}
                         />
                         <div className='cart-item-name'>{item.name}</div>
@@ -198,7 +203,7 @@ const Cart = () => {
                             src={getImageUrl(item.image)} 
                             alt={item.name} 
                             onError={(e) => {
-                              e.target.src = 'https://via.placeholder.com/100x100?text=Food';
+                              e.target.src = FALLBACK_IMG;
                             }}
                           />
                           <div className='mobile-item-info'>

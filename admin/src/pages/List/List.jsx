@@ -11,16 +11,23 @@ const List = ({url}) => {
   const getImageUrl = (image) => {
     if (!image) return '';
 
-    // Keep uploads on the configured API origin so HTTPS admin pages do not request HTTP images.
-    try {
-      const imageUrl = new URL(image, `${url}/`);
-      if (imageUrl.pathname.includes('/uploads/')) {
-        return `${url.replace(/\/$/, '')}${imageUrl.pathname}`;
+    const imageValue = String(image).trim();
+    const baseUrl = (url || 'http://localhost:4000').replace(/\/$/, '');
+
+    if (/^https?:\/\//i.test(imageValue)) {
+      try {
+        const parsed = new URL(imageValue);
+        if (parsed.pathname.includes('/uploads/')) {
+          return `${baseUrl}${parsed.pathname}`;
+        }
+        return parsed.href;
+      } catch {
+        return imageValue;
       }
-      return imageUrl.href;
-    } catch {
-      return `${url.replace(/\/$/, '')}/uploads/${image.replace(/^\/+/, '')}`;
     }
+
+    const normalized = imageValue.replace(/^\/+/, '').replace(/^uploads\/+/, '');
+    return `${baseUrl}/uploads/${normalized}`;
   };
 
   const fetchList = useCallback(async () =>{
@@ -71,7 +78,7 @@ const List = ({url}) => {
         </div>
         {list.map((item,index)=>{
           return(
-            <div key={index} className="list-table-format">
+            <div key={item._id || index} className="list-table-format">
               <img 
                 src={getImageUrl(item.image)} 
                 alt={item.name}

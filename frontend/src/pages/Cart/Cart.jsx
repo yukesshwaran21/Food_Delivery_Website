@@ -15,11 +15,13 @@ const resolveImageUrl = (image, apiBaseUrl) => {
   const imageValue = String(image).trim();
   if (!imageValue) return FALLBACK_IMG;
 
+  const baseUrl = (apiBaseUrl || 'http://localhost:4000').replace(/\/$/, '');
+
   if (/^https?:\/\//i.test(imageValue)) {
     try {
       const parsed = new URL(imageValue);
       if (parsed.pathname.includes('/uploads/')) {
-        return `${apiBaseUrl}${parsed.pathname}`;
+        return `${baseUrl}${parsed.pathname}`;
       }
       return parsed.href;
     } catch {
@@ -28,7 +30,7 @@ const resolveImageUrl = (image, apiBaseUrl) => {
   }
 
   const normalized = imageValue.replace(/^\/+/, '').replace(/^uploads\/+/, '');
-  return `${apiBaseUrl}/uploads/${normalized}`;
+  return `${baseUrl}/uploads/${normalized}`;
 };
 
 const Cart = () => {

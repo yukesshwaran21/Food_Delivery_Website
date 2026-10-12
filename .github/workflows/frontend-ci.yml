@@ -9,6 +9,7 @@ on:
 
 jobs:
   test-and-build:
+    name: Frontend Quality Checks
     runs-on: ubuntu-latest
 
     defaults:
@@ -29,8 +30,23 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run unit tests
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run Unit Tests
         run: npm run test:unit
 
-      - name: Build frontend
+      - name: Run Integration Tests
+        run: npm run test:integration
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run E2E Tests
+        run: npm run test:e2e -- --workers=1
+
+      - name: Run Regression Tests
+        run: npm run test:regression
+
+      - name: Build Frontend
         run: npm run build

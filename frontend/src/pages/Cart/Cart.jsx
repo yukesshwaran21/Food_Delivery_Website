@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import './Cart.css';
 import './cart-title.css';
 import './cart-mobile.css';
+import './discount-notification.css';
 import { StoreContext } from '../../components/context/StoreContext';
 import { useNavigate } from 'react-router-dom';
 import { assets } from '../../assets/assets';
@@ -37,11 +38,51 @@ const Cart = () => {
   const navigate = useNavigate();
   const hasItems = food_list && food_list.length > 0 && Object.values(cartItems).some(qty => qty > 0);
   const itemCount = getTotalCartItems();
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [promoMessage, setPromoMessage] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
   
   const getImageUrl = (image) => resolveImageUrl(image, url);
+  const subtotal = getTotalCartAmount();
+  const deliveryFee = subtotal === 0 || appliedPromo?.freeDelivery ? 0 : 2;
+  const discountAmount = appliedPromo?.freeDelivery ? 0 : subtotal * (appliedPromo?.discount || 0);
+  const total = Math.max(0, subtotal - discountAmount + deliveryFee);
+
+  const handleApplyPromoCode = () => {
+    const code = promoCode.trim().toLowerCase();
+    const promos = {
+      welcome10: { discount: 0.1, title: '10% Discount Applied!', text: 'You saved 10% on your order.' },
+      special25: { discount: 0.25, title: 'Special 25% Off!', text: 'You saved 25% on your order.' },
+      freeship: { freeDelivery: true, title: 'Free Delivery!', text: 'Your delivery fee has been waived.' },
+    };
+
+    if (!code || !promos[code]) {
+      setAppliedPromo(null);
+      setPromoMessage('Enter a valid promo code.');
+      setShowNotification(false);
+      return;
+    }
+
+    setAppliedPromo({ code, ...promos[code] });
+    setPromoMessage('');
+    setShowNotification(true);
+  };
 
   return (
     <div className='cart-page'>
+      {showNotification && appliedPromo && (
+        <div className="discount-notification-container" role="status">
+          <div className="discount-notification">
+            <div className="discount-icon">%</div>
+            <div className="discount-content">
+              <h4 className="discount-title">{appliedPromo.title}</h4>
+              <p className="discount-message">{appliedPromo.text}</p>
+            </div>
+            <button className="discount-close" aria-label="Close promo notification" onClick={() => setShowNotification(false)}>×</button>
+          </div>
+        </div>
+      )}
       <div className='cart-container'>
         <div className='cart-header fade-in'>
           <h1 className="cart-title">
@@ -168,29 +209,54 @@ const Cart = () => {
                 
                 <div className='summary-row'>
                   <span>Subtotal</span>
-                  <span>${getTotalCartAmount().toFixed(2)}</span>
+                  <span>${subtotal.toFixed(2)}</span>
                 </div>
+
+                {discountAmount > 0 && (
+                  <>
+                    <div className='summary-row discount-row'>
+                      <span>Discount</span>
+                      <span className="discount-value">-${discountAmount.toFixed(2)}</span>
+                    </div>
+                    <hr className='summary-divider' />
+                  </>
+                )}
                 
                 <hr className='summary-divider' />
                 
                 <div className='summary-row'>
                   <span>Delivery Fee</span>
-                  <span>${getTotalCartAmount() === 0 ? '0.00' : '2.00'}</span>
+                  <span>${deliveryFee.toFixed(2)}</span>
                 </div>
                 
                 <hr className='summary-divider' />
                 
                 <div className='summary-total'>
                   <span className='total-label'>Total</span>
-                  <span className='total-amount'>
-                    ${(getTotalCartAmount() === 0 ? 0 : getTotalCartAmount() + 2).toFixed(2)}
-                  </span>
+                  <span className='total-amount'>${total.toFixed(2)}</span>
                 </div>
                 
                 <button 
                   className='checkout-btn'
                   onClick={() => navigate('/order')}
                 >PROCEED TO CHECKOUT</button>
+
+                <div className='promo-section'>
+                  <h3 className='promo-title'>Have a promo code?</h3>
+                  <p className='promo-description'>Try: welcome10, special25, or freeship</p>
+                  <div className='promo-input-container'>
+                    <input
+                      className='promo-input'
+                      type='text'
+                      placeholder='Enter promo code'
+                      value={promoCode}
+                      aria-label='Promo code'
+                      onChange={(event) => setPromoCode(event.target.value)}
+                    />
+                    <button className='promo-btn' type='button' onClick={handleApplyPromoCode}>Apply</button>
+                  </div>
+                  {promoMessage && <p className='promo-error' role='alert'>{promoMessage}</p>}
+                </div>
               </div>
             </div>
           </div>

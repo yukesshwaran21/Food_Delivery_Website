@@ -1,0 +1,39 @@
+.discount-notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    max-width: 400px;
+    width: calc(100% - 40px);
+    animation: slideInRight 0.3s ease-out;
+}
+
+.discount-notification {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    color: white;
+    background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(40, 72, 179, 0.3);
+}
+
+.discount-icon { font-size: 1.75rem; font-weight: var(--weight-bold); }
+.discount-content { flex: 1; }
+.discount-title, .discount-message { margin: 0; }
+.discount-title { font-size: var(--font-md); }
+.discount-message { font-size: var(--font-xs); opacity: 0.9; }
+.discount-close {
+    padding: 0 0 0 0.5rem;
+    border: 0;
+    color: white;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}

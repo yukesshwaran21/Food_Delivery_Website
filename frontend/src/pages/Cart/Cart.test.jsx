@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { StoreContext } from '../../components/context/StoreContext';
 import Cart from './Cart';
@@ -77,5 +77,31 @@ it('displays the delivery fee and total', () => {
 
     expect(screen.getByText('Your cart is empty'))
       .toBeInTheDocument();
+  });
+
+  it('applies a percentage promo code to the order total', () => {
+    renderCart();
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Promo code' }), {
+      target: { value: 'welcome10' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    expect(screen.getByText('10% Discount Applied!')).toBeInTheDocument();
+    expect(screen.getByText('-$1.00')).toBeInTheDocument();
+    expect(screen.getAllByText('$11.00').length).toBeGreaterThan(0);
+  });
+
+  it('waives delivery for the free shipping promo code', () => {
+    renderCart();
+
+    fireEvent.change(screen.getByRole('textbox', { name: 'Promo code' }), {
+      target: { value: 'freeship' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: 'Apply' }));
+
+    expect(screen.getByText('Free Delivery!')).toBeInTheDocument();
+    expect(screen.getAllByText('$0.00').length).toBeGreaterThan(0);
+    expect(screen.getAllByText('$10.00').length).toBeGreaterThan(0);
   });
 });

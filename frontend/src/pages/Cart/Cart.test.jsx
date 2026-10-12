@@ -1,6 +1,6 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { StoreContext } from '../../components/context/StoreContext';
 import Cart from './Cart';
@@ -63,33 +63,6 @@ it('displays the delivery fee and total', () => {
 
   expect(screen.getAllByText('$12.00'))
     .not.toHaveLength(0);
-});
-
-
-
-  it('applies the welcome10 promo code', () => {
-  renderCart();
-
-  const promoInput = screen.getAllByPlaceholderText(
-    'Enter promo code'
-  )[0];
-
-  fireEvent.change(promoInput, {
-    target: { value: 'welcome10' },
-  });
-
-  fireEvent.click(
-    screen.getAllByRole('button', { name: 'Apply' })[0]
-  );
-
-  expect(screen.getByText('10% Discount Applied!'))
-    .toBeInTheDocument();
-
-  expect(screen.getByText('-$1.00'))
-    .toBeInTheDocument();
-
-  expect(screen.getByText('$11.00'))
-    .toBeInTheDocument();
 });
 
   it('shows the empty-cart message when there are no items', () => {

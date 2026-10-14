@@ -105,6 +105,26 @@ Start the admin app :
 npm run dev
 ```
 
+## Testing
+
+Run frontend tests from the `frontend` directory so Vitest and Playwright use
+their matching local configurations and dependencies:
+
+```sh
+cd frontend
+
+# Unit and integration tests
+npm run test:unit
+npm run test:integration
+
+# End-to-end tests
+npm run test:e2e
+```
+
+Do not run `npx playwright test` from the repository root. The root directory
+does not contain the frontend test configuration, so Playwright can discover
+Vitest component tests and report CSS parsing or duplicate test-runner errors.
+
 ## Usage
 
 Access the customer-facing app https://food-delivery-website-3-tq77.onrender.com.
@@ -127,7 +147,6 @@ For any questions or suggestions, feel free to contact me.
 Happy coding!
 
 Feel free to customize this template according to your specific project details and requirements.
-
 
 
 

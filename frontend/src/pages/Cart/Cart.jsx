@@ -237,7 +237,7 @@ const Cart = () => {
                 </div>
                 
                 <button 
-                  className='checkout-btn'
+                  className='checkout-button'
                   onClick={() => navigate('/order')}
                 >PROCEED TO CHECKOUT</button>
 

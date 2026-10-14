@@ -88,7 +88,7 @@ jobs:
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
+          GEMINI_MODEL: gemini-3.8-flash
           LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
           UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
           INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}

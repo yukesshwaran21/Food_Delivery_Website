@@ -2,8 +2,40 @@ import { test, expect } from "@playwright/test";
 
 test.describe("User Login Feature", () => {
   test.beforeEach(async ({ page }) => {
-    // TODO: Navigate to the home page or login page depending on actual routing
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "captchaVerifiedUntil",
+        String(Date.now() + 60 * 60 * 1000)
+      );
+    });
+
+    await page.route("**/api/user/login", async (route) => {
+      const request = route.request().postDataJSON();
+      const isValidLogin =
+        request.email === "test-user@example.com" &&
+        request.password === "ValidPassword123!";
+
+      if (isValidLogin) {
+        await route.fulfill({
+          status: 200,
+          contentType: "application/json",
+          body: JSON.stringify({ success: true, token: "e2e-test-token" }),
+        });
+        return;
+      }
+
+      await route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({
+          success: false,
+          message: "Invalid email or password",
+        }),
+      });
+    });
+
     await page.goto("/login");
+    await page.locator("#terms").check();
   });
 
   test("Login interface provides required elements", async ({ page }) => {
@@ -20,7 +52,7 @@ test.describe("User Login Feature", () => {
     await page.getByRole("button", { name: /login|sign in|submit/i }).click();
 
     // TODO: Update expected post-login URL or dashboard element selector
-    await expect(page).toHaveURL(/dashboard|home/);
+    await expect(page).toHaveURL(/dashboard|home|\/$/);
   });
 
   test("Failed login with incorrect password", async ({ page }) => {
@@ -97,6 +129,6 @@ test.describe("User Login Feature", () => {
     await page.getByRole("button", { name: /login|sign in|submit/i }).click();
 
     // TODO: Confirm successful redirection after correction
-    await expect(page).toHaveURL(/dashboard|home/);
+    await expect(page).toHaveURL(/dashboard|home|\/$/);
   });
 });

@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { GoogleLogin } from '@react-oauth/google'
+import { useNavigate } from 'react-router-dom'
 import './LoginPopup.css'
 import { assets } from '../../assets/assets'
 import { StoreContext } from './../context/StoreContext';
@@ -26,6 +27,7 @@ const LoginPopup = ({ setShowLogin }) => {
     }
 
     const { url, setToken } = useContext(StoreContext)
+    const navigate = useNavigate()
     const recaptchaRef = useRef(null)
     const [captchaToken, setCaptchaToken] = useState(null)
     const [captchaBypassActive, setCaptchaBypassActive] = useState(() => getCaptchaBypassStatus())
@@ -87,6 +89,7 @@ const LoginPopup = ({ setShowLogin }) => {
                 setCaptchaToken(null)
                 recaptchaRef.current?.reset()
                 setShowLogin(false);
+                navigate('/');
             } else {
                 setError(response.data.message || "Something went wrong");
                 setCaptchaToken(null)

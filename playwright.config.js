@@ -1,11 +1,31 @@
 import { defineConfig } from "@playwright/test";
-import frontendConfig from "./frontend/playwright.config.js";
 
 export default defineConfig({
-  ...frontendConfig,
   testDir: "./frontend/tests",
-  webServer: {
-    ...frontendConfig.webServer,
-    cwd: "./frontend",
+  reporter: [
+    ["html", { open: "never" }],
+    ["json", { outputFile: "frontend/test-results/results.json" }],
+  ],
+  webServer: [
+    {
+      command: "npm start",
+      cwd: "./backend",
+      url: "http://localhost:4000",
+      reuseExistingServer: true,
+    },
+    {
+      command: "npm run dev -- --host 127.0.0.1",
+      cwd: "./frontend",
+      url: "http://localhost:5173",
+      reuseExistingServer: true,
+    },
+  ],
+  retries: process.env.CI ? 1 : 0,
+  use: {
+    baseURL: "http://localhost:5173",
+    browserName: "chromium",
+    headless: true,
+    trace: "on-first-retry",
+    screenshot: "only-on-failure",
   },
 });

@@ -66,7 +66,30 @@ const listFood = async (req,res) =>{
 const removeFood = async (req,res)=>{
     try {
         const food = await foodModel.findById(req.body.id);
-        fs.unlink(path.join(uploadsDirectory, food.image),()=>{})
+        if (!food) {
+            return res.status(404).json({success:false, message:'Food not found'})
+        }
+
+        const imageFilename = path.basename(String(food.image || ''));
+        if (
+            !imageFilename ||
+            imageFilename !== String(food.image) ||
+            !/^[A-Za-z0-9._-]+$/.test(imageFilename)
+        ) {
+            return res.status(400).json({success:false, message:'Invalid image filename'})
+        }
+
+        const uploadsRoot = path.resolve(uploadsDirectory);
+        const imagePath = path.resolve(uploadsRoot, imageFilename);
+        if (!imagePath.startsWith(`${uploadsRoot}${path.sep}`)) {
+            return res.status(400).json({success:false, message:'Invalid image path'})
+        }
+
+        await fs.promises.unlink(imagePath).catch((error) => {
+            if (error.code !== 'ENOENT') {
+                throw error
+            }
+        })
 
         await foodModel.findByIdAndDelete(req.body.id)
         res.json({success:true,message:'Food Removed'})

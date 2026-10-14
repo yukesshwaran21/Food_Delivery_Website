@@ -2,6 +2,7 @@ import express from 'express'
 import { addFood, listFood, removeFood } from '../controllers/foodController.js'
 import multer from 'multer'
 import path from 'path'
+import { randomUUID } from 'crypto'
 import { fileURLToPath } from 'url'
 
 const foodRouter = express.Router();
@@ -13,7 +14,7 @@ const uploadsDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)),
 const storage = multer.diskStorage({
     destination:uploadsDirectory,
     filename: (req,file,cb)=>{
-        return cb(null,`${Date.now()}${file.originalname}`)
+        return cb(null,`${randomUUID()}${path.extname(file.originalname).toLowerCase()}`)
     }
 })
 

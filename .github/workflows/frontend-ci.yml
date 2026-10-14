@@ -1,4 +1,3 @@
-
 name: Food Delivery Frontend CI
 
 on:
@@ -8,8 +7,8 @@ on:
     branches: [main, master]
 
 jobs:
-  test-and-build:
-    name: Frontend Quality Checks
+  quality-checks:
+    name: AI-Assisted Quality Checks
     runs-on: ubuntu-latest
 
     defaults:
@@ -30,55 +29,104 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Playwright Chromium
-        run: npx playwright install --with-deps chromium
+      - name: Prepare diagnostic directory
+        run: mkdir -p test-results/ci
 
-      # Run all Playwright tests and retain failure status
-      - name: Run Playwright Tests
-        id: playwright
+      - name: Run ESLint
+        id: lint
         continue-on-error: true
-        env:
-          CI: true
-          APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: |
           set +e
-          npm run test:e2e -- --grep-invert "visual"
-          status=$?
+          npm run lint 2>&1 | tee test-results/ci/lint.log
+          status=${PIPESTATUS[0]}
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
-      # Analyze failed Playwright tests using Gemini
-      - name: Analyze Failures with Gemini AI
+      - name: Run Unit Tests
+        id: unit
+        continue-on-error: true
+        run: |
+          set +e
+          npm run test:unit 2>&1 | tee test-results/ci/unit.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run Integration Tests
+        id: integration
+        continue-on-error: true
+        run: |
+          set +e
+          npm run test:integration 2>&1 | tee test-results/ci/integration.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Run End-to-End Tests
+        id: e2e
+        continue-on-error: true
+        run: |
+          set +e
+          npm run test:e2e 2>&1 | tee test-results/ci/e2e.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Build Frontend
+        id: build
+        continue-on-error: true
+        run: |
+          set +e
+          npm run build 2>&1 | tee test-results/ci/build.log
+          status=${PIPESTATUS[0]}
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
+
+      - name: Analyze All Results with Gemini AI
         id: ai-analysis
-        if: ${{ always() && steps.playwright.outputs.exit_code != '0' }}
+        if: ${{ always() }}
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GEMINI_MODEL: gemini-2.5-flash
+          LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
+          UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
+          INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}
+          E2E_STATUS: ${{ steps.e2e.outputs.exit_code }}
+          BUILD_STATUS: ${{ steps.build.outputs.exit_code }}
         run: node scripts/analyze-failures.js
 
-      # Preserve evidence for debugging
-      - name: Upload Playwright Test Evidence
+      - name: Upload Quality Check and AI Reports
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-test-evidence
+          name: quality-check-and-ai-reports
           path: |
-            frontend/test-results/
-            frontend/playwright-report/
+            frontend/test-results/ci/
+            frontend/test-results/ai-failure-analysis.md
           if-no-files-found: warn
           retention-days: 7
 
-      - name: Run ESLint
-        run: npm run lint
+      - name: Fail Workflow If Any Quality Check Failed
+        if: ${{ always() }}
+        env:
+          LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
+          UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
+          INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}
+          E2E_STATUS: ${{ steps.e2e.outputs.exit_code }}
+          BUILD_STATUS: ${{ steps.build.outputs.exit_code }}
+        run: |
+          for status in \
+            "$LINT_STATUS" \
+            "$UNIT_STATUS" \
+            "$INTEGRATION_STATUS" \
+            "$E2E_STATUS" \
+            "$BUILD_STATUS"
+          do
+            if [ "$status" != "0" ]; then
+              echo "One or more quality checks failed."
+              exit 1
+            fi
+          done
 
-      - name: Run Unit Tests
-        run: npm run test:unit
-
-      - name: Build Frontend
-        run: npm run build
-
-      # Ensure failed Playwright tests fail the overall workflow
-      - name: Preserve Playwright Failure Status
-        if: ${{ always() && steps.playwright.outputs.exit_code != '0' }}
-        run: exit 1
+          echo "All quality checks passed."

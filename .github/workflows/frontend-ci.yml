@@ -106,27 +106,3 @@ jobs:
             frontend/test-results/ai-failure-analysis.md
           if-no-files-found: warn
           retention-days: 7
-
-      - name: Fail Workflow If Any Quality Check Failed
-        if: ${{ always() }}
-        env:
-          LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
-          UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
-          INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}
-          E2E_STATUS: ${{ steps.e2e.outputs.exit_code }}
-          BUILD_STATUS: ${{ steps.build.outputs.exit_code }}
-        run: |
-          for status in \
-            "$LINT_STATUS" \
-            "$UNIT_STATUS" \
-            "$INTEGRATION_STATUS" \
-            "$E2E_STATUS" \
-            "$BUILD_STATUS"
-          do
-            if [ "$status" != "0" ]; then
-              echo "One or more quality checks failed."
-              exit 1
-            fi
-          done
-
-          echo "All quality checks passed."

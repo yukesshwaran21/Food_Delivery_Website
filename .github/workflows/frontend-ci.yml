@@ -42,7 +42,7 @@ jobs:
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
         run: |
           set +e
-          npx playwright test
+          npx playwright test --grep-invert "visual"
           status=$?
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0

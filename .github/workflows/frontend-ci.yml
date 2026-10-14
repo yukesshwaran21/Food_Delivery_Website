@@ -40,12 +40,17 @@ jobs:
         env:
           CI: true
           APPLITOOLS_API_KEY: ${{ secrets.APPLITOOLS_API_KEY }}
-        run: npx playwright test
+        run: |
+          set +e
+          npx playwright test
+          status=$?
+          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
+          exit 0
 
       # Analyze failed Playwright tests using Gemini
       - name: Analyze Failures with Gemini AI
         id: ai-analysis
-        if: ${{ always() && steps.playwright.outcome == 'failure' }}
+        if: ${{ always() && steps.playwright.outputs.exit_code != '0' }}
         continue-on-error: true
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -75,5 +80,5 @@ jobs:
 
       # Ensure failed Playwright tests fail the overall workflow
       - name: Preserve Playwright Failure Status
-        if: ${{ always() && steps.playwright.outcome == 'failure' }}
+        if: ${{ always() && steps.playwright.outputs.exit_code != '0' }}
         run: exit 1

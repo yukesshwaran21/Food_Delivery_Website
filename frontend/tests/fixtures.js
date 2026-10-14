@@ -265,7 +265,7 @@ async function healAction(page, description, method, args, originalError) {
   const existingOptions = retryArgs[optionsIndex];
 
   if (
-    existingOptions == null ||
+    existingOptions === null ||
     typeof existingOptions === "object"
   ) {
     retryArgs[optionsIndex] = {
@@ -327,7 +327,7 @@ function wrapLocator(locator, page, description) {
           const existingOptions = originalArgs[optionsIndex];
 
           if (
-            existingOptions == null ||
+            existingOptions === null ||
             typeof existingOptions === "object"
           ) {
             originalArgs[optionsIndex] = {

@@ -12,9 +12,10 @@ const Navbar = ({setShowLogin}) => {
   
   const profileDropdownRef = useRef(null);
   
-  const {getTotalCartAmount, getTotalCartItems, token, setToken} = useContext(StoreContext);
+  const {getTotalCartItems, token, setToken} = useContext(StoreContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const isLoginPage = location.pathname === '/login';
   
   // Handle scroll event for sticky navbar
   useEffect(() => {
@@ -217,7 +218,7 @@ const Navbar = ({setShowLogin}) => {
             </Link>
           </div>
           
-          {!token ? 
+          {!token && !isLoginPage ?
             <button 
               className="signin-btn" 
               onClick={() => setShowLogin(true)}

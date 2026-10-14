@@ -7,7 +7,7 @@ import axios from 'axios';
 import CategorySelector from '../CategorySelector/CategorySelector';
 
 const TopDishes = ({ category, setCategory }) => {
-  const { food_list, url } = useContext(StoreContext);
+  const { url } = useContext(StoreContext);
   const [topDishes, setTopDishes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryChanging, setCategoryChanging] = useState(false);

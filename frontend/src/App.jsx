@@ -20,6 +20,7 @@ const App = () => {
         <Navbar setShowLogin={setShowLogin}/>
         <Routes>
           <Route path='/' element={<Home/>}/>
+          <Route path='/login' element={<LoginPopup setShowLogin={setShowLogin}/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/order' element={<PlaceOrder/>}/>
           <Route path='/verify' element={<Verify/>}/>
@@ -32,5 +33,4 @@ const App = () => {
 }
 
 export default App
-
 

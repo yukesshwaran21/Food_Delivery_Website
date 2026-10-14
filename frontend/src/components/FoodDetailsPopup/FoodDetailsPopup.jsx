@@ -9,7 +9,6 @@ const FoodDetailsPopup = ({
   name, 
   description, 
   price, 
-  image, 
   rank, 
   addToCart, 
   imageUrl 

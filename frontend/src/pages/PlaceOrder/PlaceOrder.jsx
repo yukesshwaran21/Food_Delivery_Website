@@ -109,17 +109,17 @@ const PlaceOrder = () => {
     setIsSubmitting(true);
     
     try {
-      let orderItems = [];
-      food_list.map((item, index)=>{
+      const orderItems = [];
+      food_list.forEach((item)=>{
         if(cartItems[item._id]>0){
-          let itemInfo = {...item}; // Create a copy to avoid mutating the original
+          const itemInfo = {...item}; // Create a copy to avoid mutating the original
           itemInfo["quantity"] = cartItems[item._id];
           orderItems.push(itemInfo);
         }
         return null;
       });
       
-      let orderData = {
+      const orderData = {
         address: data,
         items: orderItems,
         amount: getTotalCartAmount() + 2,
@@ -423,4 +423,3 @@ const PlaceOrder = () => {
   );
 }
 export default PlaceOrder;
-

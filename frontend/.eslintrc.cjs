@@ -42,6 +42,12 @@ module.exports = {
     'prefer-const': 'error',
     'no-var': 'error',
 
+    'no-unused-vars': ['error', {
+      varsIgnorePattern: '^React$',
+    }],
+    'react/prop-types': 'off',
+    'react/no-unescaped-entities': 'off',
+    'react-hooks/exhaustive-deps': 'off',
     'react/jsx-no-target-blank': 'off',
   },
 };

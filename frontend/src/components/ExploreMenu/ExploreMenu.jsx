@@ -1,7 +1,7 @@
 import React from 'react'
 import './ExploreMenu.css'
 
-const ExploreMenu = ({category, setCategory}) => {
+const ExploreMenu = () => {
   return (
     <div className='explore-menu' id='explore-menu'>
         <div className="explore-menu-header">

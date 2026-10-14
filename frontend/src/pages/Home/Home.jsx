@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import './Home.css'
 import Header from '../../components/Header/Header'
-import FoodDisplay from '../../components/FoodDisplay/FoodDisplay'
 import AppDownload from '../../components/AppDownload/AppDownload'
 import TopDishes from '../../components/TopDishes/TopDishes'
 import FeatureSection from '../../components/FeatureSection/FeatureSection'
@@ -13,17 +12,7 @@ import ScrollReveal from '../../components/ScrollReveal/ScrollReveal'
 
 const Home = () => {
   const [category, setCategory] = useState('All')
-  const [isLoading, setIsLoading] = useState(true)
   const [showBackToTop, setShowBackToTop] = useState(false)
-  
-  // Simulate loading state for demo purposes
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false)
-    }, 800)
-    
-    return () => clearTimeout(timer)
-  }, [])
   
   // Handle scroll events for "Back to Top" button
   useEffect(() => {

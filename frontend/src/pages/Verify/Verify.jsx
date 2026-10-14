@@ -63,7 +63,7 @@ const Verify = () => {
 
     useEffect(() => {
         verifyPayment();
-    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <div className='verify'>

@@ -80,7 +80,7 @@ const removeFood = async (req,res)=>{
         }
 
         const uploadsRoot = path.resolve(uploadsDirectory);
-        const imagePath = path.resolve(uploadsRoot, path.basename(imageFilename));
+        const imagePath = `${uploadsRoot}${path.sep}${path.basename(imageFilename)}`;
         if (!imagePath.startsWith(`${uploadsRoot}${path.sep}`)) {
             return res.status(400).json({success:false, message:'Invalid image path'})
         }

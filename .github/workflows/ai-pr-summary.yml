@@ -1,37 +1,32 @@
-name: AI-Generated Push Summary
+- name: Setup Node.js
+  uses: actions/setup-node@v4
+  with:
+    node-version: "20"
 
-on:
-  push:
+- name: Install Ollama
+  run: |
+    curl -fsSL https://ollama.com/install.sh | sh
 
-permissions:
-  contents: write
+- name: Start Ollama
+  run: |
+    ollama serve > /tmp/ollama.log 2>&1 &
+    for i in $(seq 1 30); do
+      if curl -fsS http://127.0.0.1:11434/api/tags; then
+        exit 0
+      fi
+      sleep 2
+    done
+    cat /tmp/ollama.log
+    exit 1
 
-jobs:
-  summarize:
-    name: Generate push summary
-    runs-on: ubuntu-latest
+- name: Download Ollama model
+  run: ollama pull qwen2.5:1.5b
 
-    steps:
-      - name: Checkout workflow dependencies
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: frontend/package-lock.json
-
-      - name: Install summary dependencies
-        working-directory: frontend
-        run: npm ci --ignore-scripts
-
-      - name: Generate and publish AI summary
-        working-directory: frontend
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
-          COMMIT_SHA: ${{ github.sha }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-2.5-flash
-        run: node scripts/generate-pr-summary.js
+- name: Generate PR summary
+  env:
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    GITHUB_REPOSITORY: ${{ github.repository }}
+    PR_NUMBER: ${{ github.event.pull_request.number }}
+    OLLAMA_URL: http://127.0.0.1:11434
+    OLLAMA_MODEL: qwen2.5:1.5b
+  run: node scripts/generate-pr-summary.js

@@ -141,12 +141,16 @@ The API endpoints for the backend can be documented using tools like Postman or 
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the code style and include relevant tests.
 
+The `Conditional LGTM` workflow runs lint, unit, integration, end-to-end, and
+build checks on every push. It adds a conditional LGTM comment to the commit
+only when all checks pass. Final acceptance still depends on repository review
+and branch protection settings.
+
 ## Contact
 For any questions or suggestions, feel free to contact me.
 
 Happy coding!
 
 Feel free to customize this template according to your specific project details and requirements.
-
 
 

@@ -1,9 +1,10 @@
 
 import "dotenv/config";
-import { GoogleGenAI } from "@google/genai";
 
-const MODEL =
-  process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
+const OLLAMA_URL = (
+  process.env.OLLAMA_URL || "http://127.0.0.1:11434"
+).replace(/\/$/, "");
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5:1.5b";
 
 const INTERACTIVE_SELECTOR = [
   "button",
@@ -17,12 +18,37 @@ const INTERACTIVE_SELECTOR = [
   "[data-testid]",
 ].join(",");
 
-const ai = process.env.GEMINI_API_KEY
-  ? new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
-  : null;
-
 function normalizeText(value = "") {
   return value.replace(/\s+/g, " ").trim();
+}
+
+async function generateRecoveryDecision(prompt) {
+  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: OLLAMA_MODEL,
+      prompt,
+      stream: false,
+      format: "json",
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `Ollama API request failed (${response.status}): ` +
+        `${(await response.text()).slice(0, 500)}`
+    );
+  }
+
+  const result = await response.json();
+  if (!result.response?.trim()) {
+    throw new Error("Ollama returned an empty locator recovery response.");
+  }
+
+  return result.response;
 }
 
 async function getCandidates(page) {
@@ -86,13 +112,6 @@ export async function selfHealClick(
       `Original locator failed: ${originalSelector}`
     );
 
-    if (!ai) {
-      throw new Error(
-        `Self-healing requires GEMINI_API_KEY. ` +
-          `Original locator failed: ${originalSelector}`
-      );
-    }
-
     const candidates = (await getCandidates(page)).filter(
       (candidate) => candidate.visible && !candidate.disabled
     );
@@ -135,20 +154,12 @@ candidateIndex must equal the candidate's fullIndex.
 Confidence must be between 0 and 1.
 `;
 
-    let response;
-
+    let responseText;
     try {
-      response = await ai.models.generateContent({
-        model: MODEL,
-        contents: prompt,
-        config: {
-          responseMimeType: "application/json",
-          temperature: 0,
-        },
-      });
+      responseText = await generateRecoveryDecision(prompt);
     } catch (error) {
       throw new Error(
-        `AI locator recovery failed: ${error.message}. ` +
+        `Ollama locator recovery failed: ${error.message}. ` +
           `Original locator: ${originalSelector}`
       );
     }
@@ -156,10 +167,10 @@ Confidence must be between 0 and 1.
     let decision;
 
     try {
-      decision = JSON.parse(response.text);
+      decision = JSON.parse(responseText);
     } catch {
       throw new Error(
-        "AI locator recovery returned invalid JSON. Test stopped."
+        "Ollama locator recovery returned invalid JSON. Test stopped."
       );
     }
 
@@ -172,7 +183,7 @@ Confidence must be between 0 and 1.
       confidence < 0.85
     ) {
       throw new Error(
-        `AI could not identify a sufficiently confident replacement. ` +
+        `Ollama could not identify a sufficiently confident replacement. ` +
           `Reason: ${decision.reason || "No reliable match"}`
       );
     }
@@ -183,7 +194,7 @@ Confidence must be between 0 and 1.
 
     if (!selected) {
       throw new Error(
-        "AI selected a candidate that is no longer available."
+        "Ollama selected a candidate that is no longer available."
       );
     }
 

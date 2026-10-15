@@ -17,6 +17,7 @@ const mockStore = {
   food_list: [food],
   addToCart: vi.fn(),
   removeFromCart: vi.fn(),
+  clearCart: vi.fn(),
   getTotalCartAmount: vi.fn(() => 10),
   getTotalCartItems: vi.fn(() => 1),
   url: 'http://localhost:4000',
@@ -103,5 +104,14 @@ it('displays the delivery fee and total', () => {
     expect(screen.getByText('Free Delivery!')).toBeInTheDocument();
     expect(screen.getAllByText('$0.00').length).toBeGreaterThan(0);
     expect(screen.getAllByText('$10.00').length).toBeGreaterThan(0);
+  });
+
+  it('clears the cart after confirmation', () => {
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    renderCart();
+    fireEvent.click(screen.getByRole('button', { name: 'CLEAR CART' }));
+
+    expect(mockStore.clearCart).toHaveBeenCalledTimes(1);
   });
 });

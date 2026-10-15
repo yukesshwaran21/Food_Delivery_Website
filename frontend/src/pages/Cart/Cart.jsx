@@ -34,7 +34,7 @@ const resolveImageUrl = (image, apiBaseUrl) => {
 };
 
 const Cart = () => {
-  const { cartItems = {}, food_list = [], removeFromCart, addToCart, getTotalCartAmount, getTotalCartItems, url } = useContext(StoreContext);
+  const { cartItems = {}, food_list = [], removeFromCart, addToCart, clearCart, getTotalCartAmount, getTotalCartItems, url } = useContext(StoreContext);
   const navigate = useNavigate();
   const hasItems = food_list && food_list.length > 0 && Object.values(cartItems).some(qty => qty > 0);
   const itemCount = getTotalCartItems();
@@ -67,6 +67,16 @@ const Cart = () => {
     setAppliedPromo({ code, ...promos[code] });
     setPromoMessage('');
     setShowNotification(true);
+  };
+
+  const handleClearCart = () => {
+    if (window.confirm('Remove all items from your cart?')) {
+      clearCart();
+      setAppliedPromo(null);
+      setPromoCode('');
+      setPromoMessage('');
+      setShowNotification(false);
+    }
   };
 
   return (
@@ -240,6 +250,13 @@ const Cart = () => {
                   className='checkout-button'
                   onClick={() => navigate('/order')}
                 >PROCEED TO CHECKOUT</button>
+                <button
+                  className='clear-cart-button'
+                  type='button'
+                  onClick={handleClearCart}
+                >
+                  CLEAR CART
+                </button>
 
                 <div className='promo-section'>
                   <h3 className='promo-title'>Have a promo code?</h3>

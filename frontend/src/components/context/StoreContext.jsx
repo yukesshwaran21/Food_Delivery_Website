@@ -64,6 +64,34 @@ const StoreContextProvider = (props) => {
         }
     }
 
+    const clearCart = async () => {
+        const itemsToRemove = Object.entries(cartItems)
+            .filter(([, quantity]) => quantity > 0);
+
+        setCartItems({});
+
+        if (!token) {
+            localStorage.removeItem('guest_cart');
+            return;
+        }
+
+        try {
+            await Promise.all(itemsToRemove.flatMap(([itemId, quantity]) =>
+                Array.from({ length: quantity }, () =>
+                    axios.post(url + '/api/cart/remove', { itemId }, { headers: { token } })
+                )
+            ));
+            await loadCartData(token);
+        } catch (error) {
+            if (error?.response?.status === 401) {
+                localStorage.removeItem('token');
+                setToken('');
+            } else {
+                console.error('Error clearing cart:', error);
+            }
+        }
+    }
+
     const getTotalCartAmount = () => {
         let totalAmount = 0;
         for (const item in cartItems) {
@@ -134,6 +162,7 @@ const StoreContextProvider = (props) => {
         setCartItems,
         addToCart,
         removeFromCart,
+        clearCart,
         getTotalCartAmount,
         getTotalCartItems,
         url,

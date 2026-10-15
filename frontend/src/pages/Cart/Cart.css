@@ -332,6 +332,24 @@
     background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
 }
 
+.clear-cart-button {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    border: 1px solid #dc3545;
+    border-radius: 8px;
+    background: transparent;
+    color: #dc3545;
+    font-weight: var(--weight-semibold);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-cart-button:hover {
+    background: #dc3545;
+    color: white;
+}
+
 .promo-section {
     margin-top: 1.5rem;
     padding-top: 1.5rem;

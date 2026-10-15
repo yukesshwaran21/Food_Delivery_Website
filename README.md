@@ -146,11 +146,15 @@ build checks on every push. It adds a conditional LGTM comment to the commit
 only when all checks pass. Final acceptance still depends on repository review
 and branch protection settings.
 
+The AI push-summary workflow applies context hygiene before sending commit
+messages and diffs to Ollama. Email addresses, phone numbers, and common
+personal fields such as names and addresses are replaced with
+`{{PLACEHOLDER}}` values.
+
+
 ## Contact
 For any questions or suggestions, feel free to contact me.
 
 Happy coding!
 
 Feel free to customize this template according to your specific project details and requirements.
-
-

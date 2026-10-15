@@ -1,9 +1,9 @@
 
 import "dotenv/config";
-import { GoogleGenAI } from "@google/genai";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { sanitizePii } from "./sanitize-pii.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
@@ -32,36 +32,34 @@ const outputPath = path.join(
   `${featureName}.spec.js`
 );
 
-const MODEL = "gemini-3.5-flash-lite";
+const ollamaUrl = (
+  process.env.OLLAMA_URL || "http://127.0.0.1:11434"
+).replace(/\/$/, "");
+const ollamaModel = process.env.OLLAMA_MODEL || "qwen2.5:1.5b";
 
 async function main() {
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error("GEMINI_API_KEY is missing from frontend/.env");
-  }
-
   const requirement = await fs.readFile(requirementPath, "utf8");
 
-  const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-  });
-
-  console.log(`Generating tests with Gemini: ${MODEL}`);
+  console.log(`Generating tests with Ollama: ${ollamaModel}`);
   console.log(`Requirement: ${requirementName}`);
   console.log(`Output: ${outputPath}`);
 
-  let response;
+  let responseCode;
 
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      response = await ai.models.generateContent({
-        model: MODEL,
-        contents: `
-Generate JavaScript Playwright tests for this requirement:
+      const response = await fetch(`${ollamaUrl}/api/generate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: ollamaModel,
+          prompt: `
+Generate JavaScript Playwright tests for this requirement. Any personal data
+in the requirement has been replaced with {{PLACEHOLDER}}:
 
-${requirement}
-        `,
-        config: {
-          systemInstruction: `
+${sanitizePii(requirement)}
+
+${`
 You are a senior QA automation engineer specializing in Playwright.
 
 Rules:
@@ -76,12 +74,26 @@ Rules:
 - Do not use eval, require, child_process, or process.env.
 - Do not perform file operations or external side effects.
 - Return only JavaScript source code, without Markdown fences.
-          `.trim(),
-          temperature: 0.2,
-          maxOutputTokens: 8192,
-        },
+`.trim()}
+`,
+          stream: false,
+        }),
       });
 
+      if (!response.ok) {
+        throw new Error(
+          `Ollama API request failed (${response.status}): ` +
+            `${(await response.text()).slice(0, 500)}`
+        );
+      }
+
+      const result = await response.json();
+      const code = result.response?.trim();
+      if (!code) {
+        throw new Error("Ollama returned an empty test response.");
+      }
+
+      responseCode = code;
       break;
     } catch (error) {
       const message = String(error.message || error);
@@ -102,15 +114,11 @@ Rules:
     }
   }
 
-  if (!response) {
-    throw new Error("Gemini did not return a response.");
+  if (!responseCode) {
+    throw new Error("Ollama did not return a response.");
   }
 
-  let code = response.text?.trim();
-
-  if (!code) {
-    throw new Error("Gemini returned an empty response.");
-  }
+  let code = responseCode;
 
   // Remove Markdown fences.
   code = code

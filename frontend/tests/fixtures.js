@@ -2,6 +2,7 @@
 import "dotenv/config";
 import { test as base, expect } from "@playwright/test";
 import { GoogleGenAI } from "@google/genai";
+import { sanitizePii } from "../scripts/sanitize-pii.js";
 
 const MODEL =
   process.env.GEMINI_MODEL || "gemini-3.5-flash-lite";
@@ -162,9 +163,9 @@ async function healAction(page, description, method, args, originalError) {
     model: MODEL,
     contents: JSON.stringify({
       task: "Choose a replacement UI element for a failed Playwright action.",
-      failedLocator: description,
+      failedLocator: sanitizePii(description),
       action: method,
-      candidates,
+      candidates: JSON.parse(sanitizePii(JSON.stringify(candidates))),
       rules: [
         "Choose only an element that represents the same intended target.",
         "Do not choose an unrelated button or action.",

@@ -82,13 +82,31 @@ jobs:
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Analyze All Results with Gemini AI
+      - name: Install Ollama for AI analysis
+        if: ${{ always() }}
+        run: curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama and download model
+        if: ${{ always() }}
+        run: |
+          ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:11434/api/tags > /dev/null; then
+              ollama pull qwen2.5:1.5b
+              exit 0
+            fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/ollama.log"
+          exit 1
+
+      - name: Analyze All Results with Ollama AI
         id: ai-analysis
         if: ${{ always() }}
         continue-on-error: true
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          GEMINI_MODEL: gemini-3.8-flash
+          OLLAMA_URL: http://127.0.0.1:11434
+          OLLAMA_MODEL: qwen2.5:1.5b
           LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
           UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
           INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}

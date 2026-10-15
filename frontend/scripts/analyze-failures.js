@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { GoogleGenAI } from "@google/genai";
+import { sanitizePii } from "./sanitize-pii.js";
 
 const resultsDir = path.resolve("test-results");
 const logsDir = path.join(resultsDir, "ci");
@@ -8,6 +8,10 @@ const reportPath = path.join(
   resultsDir,
   "ai-failure-analysis.md"
 );
+const ollamaUrl = (
+  process.env.OLLAMA_URL || "http://127.0.0.1:11434"
+).replace(/\/$/, "");
+const ollamaModel = process.env.OLLAMA_MODEL || "qwen2.5:1.5b";
 
 const checks = [
   { name: "ESLint", status: process.env.LINT_STATUS, log: "lint.log" },
@@ -32,7 +36,7 @@ function readCheckResults() {
 
     // Limit each log to avoid sending excessively large prompts.
     const log = logExists
-      ? fs.readFileSync(logPath, "utf8").slice(-12000)
+      ? sanitizePii(fs.readFileSync(logPath, "utf8").slice(-12000))
       : "No log file was generated.";
 
     return {
@@ -63,16 +67,6 @@ async function main() {
   for (const result of results) {
     console.log(`${result.name}: ${result.status}`);
   }
-
-  if (!process.env.GEMINI_API_KEY) {
-    throw new Error(
-      "GEMINI_API_KEY is missing. Configure it in GitHub repository secrets."
-    );
-  }
-
-  const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-  });
 
   const prompt = `
 You are a senior software QA engineer reviewing CI/CD quality checks.
@@ -105,15 +99,28 @@ Check results:
 ${JSON.stringify(results, null, 2)}
 `;
 
-  const response = await ai.models.generateContent({
-    model: process.env.GEMINI_MODEL || "gemini-3.8-flash",
-    contents: prompt,
+  const response = await fetch(`${ollamaUrl}/api/generate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: ollamaModel,
+      prompt,
+      stream: false,
+    }),
   });
 
-  const analysis = response.text?.trim();
+  if (!response.ok) {
+    throw new Error(
+      `Ollama API request failed (${response.status}): ` +
+        `${(await response.text()).slice(0, 500)}`
+    );
+  }
+
+  const result = await response.json();
+  const analysis = result.response?.trim();
 
   if (!analysis) {
-    throw new Error("Gemini returned an empty analysis.");
+    throw new Error("Ollama returned an empty analysis.");
   }
 
   const markdown = `# AI-Assisted CI/CD Quality Report
@@ -135,7 +142,7 @@ ${results
   )
   .join("\n")}
 
-## Gemini AI Analysis
+## Ollama AI Analysis
 
 ${analysis}
 

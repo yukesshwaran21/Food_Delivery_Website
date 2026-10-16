@@ -29,6 +29,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Check API documentation
+        working-directory: backend
+        run: npm run docs:api:check
+
       - name: Prepare diagnostic directory
         run: mkdir -p test-results/ci
 
@@ -82,38 +90,6 @@ jobs:
           echo "exit_code=$status" >> "$GITHUB_OUTPUT"
           exit 0
 
-      - name: Install Ollama for AI analysis
-        if: ${{ always() }}
-        run: curl -fsSL https://ollama.com/install.sh | sh
-
-      - name: Start Ollama and download model
-        if: ${{ always() }}
-        run: |
-          ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
-          for i in $(seq 1 30); do
-            if curl -fsS http://127.0.0.1:11434/api/tags > /dev/null; then
-              ollama pull qwen2.5:1.5b
-              exit 0
-            fi
-            sleep 2
-          done
-          cat "$RUNNER_TEMP/ollama.log"
-          exit 1
-
-      - name: Analyze All Results with Ollama AI
-        id: ai-analysis
-        if: ${{ always() }}
-        continue-on-error: true
-        env:
-          OLLAMA_URL: http://127.0.0.1:11434
-          OLLAMA_MODEL: qwen2.5:1.5b
-          LINT_STATUS: ${{ steps.lint.outputs.exit_code }}
-          UNIT_STATUS: ${{ steps.unit.outputs.exit_code }}
-          INTEGRATION_STATUS: ${{ steps.integration.outputs.exit_code }}
-          E2E_STATUS: ${{ steps.e2e.outputs.exit_code }}
-          BUILD_STATUS: ${{ steps.build.outputs.exit_code }}
-        run: node scripts/analyze-failures.js
-
       - name: Upload Quality Check and AI Reports
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -121,6 +97,4 @@ jobs:
           name: quality-check-and-ai-reports
           path: |
             frontend/test-results/ci/
-            frontend/test-results/ai-failure-analysis.md
           if-no-files-found: warn
-          retention-days: 7

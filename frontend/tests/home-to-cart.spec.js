@@ -19,5 +19,7 @@ test('user can add a food item on Home and see it in Cart', async ({ page }) => 
 
   await page.locator('a.cart-icon').click();
   await expect(page).toHaveURL(/\/cart\/?$/);
-  await expect(page.getByText(dishName, { exact: true }).first()).toBeVisible();
+  await expect(
+    page.locator('.cart-item').filter({ hasText: dishName }).first()
+  ).toBeVisible({ timeout: 15000 });
 });

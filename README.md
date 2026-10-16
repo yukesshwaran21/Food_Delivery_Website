@@ -125,6 +125,27 @@ Do not run `npx playwright test` from the repository root. The root directory
 does not contain the frontend test configuration, so Playwright can discover
 Vitest component tests and report CSS parsing or duplicate test-runner errors.
 
+### Semgrep security scanning
+
+Semgrep runs locally and in GitHub Actions. Install the Semgrep CLI once using
+the official Python package:
+
+```sh
+python -m pip install semgrep
+```
+
+From the `frontend` directory, scan the frontend, backend, and admin source:
+
+```sh
+npm run security:semgrep
+```
+
+The command uses Semgrep's automatic rules and exits with a non-zero status
+when findings are detected. The repository `.semgrepignore` excludes installed
+dependencies and generated test/build output. GitHub Actions runs the same
+blocking scan on pushes to `main`/`master` and pull requests, and uploads the
+SARIF report as a workflow artifact.
+
 ## Usage
 
 Access the customer-facing app https://food-delivery-website-3-tq77.onrender.com.
@@ -136,7 +157,20 @@ Pay using dummy visa card
 Use the admin panel to manage orders, menu items.
 
 ## API Documentation
-The API endpoints for the backend can be documented using tools like Postman or Swagger. Include endpoints for user authentication, menu items, orders, and more.
+
+The generated API endpoint inventory is available in
+[`docs/API.md`](docs/API.md). It is built from the Express route definitions
+in `backend/routes/`.
+
+After adding or changing an API route, regenerate and verify the documentation:
+
+```sh
+cd backend
+npm run docs:api
+npm run docs:api:check
+```
+
+CI checks that `docs/API.md` is up to date.
 
 ## Contributing
 Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the code style and include relevant tests.

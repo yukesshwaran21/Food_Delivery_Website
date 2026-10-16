@@ -1,0 +1,15 @@
+ {
+  "chat.tools.terminal.enableAutoApprove": true,
+  "chat.tools.terminal.autoApprove": {
+    "git status": true,
+    "git diff": true,
+    "git log": true,
+    "git branch": true,
+    "rg": true,
+    "git push": false,
+    "git remote": false,
+    "npm install": false,
+    "npx": false,
+    "wget": false
+  }
+}

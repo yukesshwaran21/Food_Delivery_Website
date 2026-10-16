@@ -19,6 +19,16 @@ export default defineConfig({
       reuseExistingServer: true,
     },
   ],
+  projects: [
+    {
+      name: "e2e",
+      testIgnore: ["**/homepage.visual.spec.js", "**/pages.visual.spec.js"],
+    },
+    {
+      name: "visual",
+      testMatch: ["**/homepage.visual.spec.js", "**/pages.visual.spec.js"],
+    },
+  ],
 retries: process.env.CI ? 1 : 0,
 
 use: {

@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "server": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "docs:api": "node scripts/generate-api-docs.js",
+    "docs:api:check": "node scripts/generate-api-docs.js --check"
   },
   "author": "",
   "license": "ISC",

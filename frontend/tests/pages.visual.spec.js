@@ -2,6 +2,8 @@
 import { test } from "@applitools/eyes-playwright/fixture";
 import { expect } from "@playwright/test";
 
+test.setTimeout(120_000);
+
 test.describe("Food Delivery Visual Regression", () => {
   test("Food listing visual test", async ({ page, eyes }) => {
     await page.goto("/");

@@ -126,6 +126,14 @@ Rules:
     .replace(/\s*```$/, "")
     .trim();
 
+  // Discard an accidental explanatory preamble before the source.
+  const playwrightImport = code.search(
+    /\bimport\s*\{[\s\S]*?\}\s*from\s*["']@playwright\/test["']/
+  );
+  if (playwrightImport >= 0) {
+    code = code.slice(playwrightImport).trim();
+  }
+
   // Basic safety checks.
   const forbidden = [
     /\bchild_process\b/,
@@ -141,7 +149,7 @@ Rules:
     );
   }
 
-  if (!/from\s*["']@playwright\/test["']/.test(code)) {
+  if (!/\bimport\s*\{[\s\S]*?\}\s*from\s*["']@playwright\/test["']/.test(code)) {
     throw new Error(
       "Generated code is missing the Playwright test import."
     );

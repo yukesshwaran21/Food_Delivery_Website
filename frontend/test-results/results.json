@@ -3,7 +3,8 @@
     "argv": [
       "C:\\Program Files\\nodejs\\node.exe",
       "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\node_modules\\@playwright\\test\\cli.js",
-      "test"
+      "test",
+      "--project=e2e"
     ],
     "configFile": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\playwright.config.js",
     "rootDir": "D:/Food_delivery/Food_Delivery_Website/frontend/tests",
@@ -17,7 +18,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 6
+      "actualWorkers": 4
     },
     "preserveOutput": "always",
     "projects": [
@@ -26,14 +27,34 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 4
         },
-        "id": "",
-        "name": "",
+        "id": "e2e",
+        "name": "e2e",
+        "testDir": "D:/Food_delivery/Food_Delivery_Website/frontend/tests",
+        "testIgnore": [
+          "**/homepage.visual.spec.js",
+          "**/pages.visual.spec.js"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "D:/Food_delivery/Food_Delivery_Website/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 4
+        },
+        "id": "visual",
+        "name": "visual",
         "testDir": "D:/Food_delivery/Food_Delivery_Website/frontend/tests",
         "testIgnore": [],
         "testMatch": [
-          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+          "**/homepage.visual.spec.js",
+          "**/pages.visual.spec.js"
         ],
         "timeout": 30000
       }
@@ -46,12 +67,15 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 6
+          "actualWorkers": 4
         },
-        "name": "",
+        "name": "e2e",
         "testDir": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests",
         "snapshotDir": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests",
-        "testIgnore": [],
+        "testIgnore": [
+          "**/homepage.visual.spec.js",
+          "**/pages.visual.spec.js"
+        ],
         "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
         "timeout": 30000,
         "use": {
@@ -63,7 +87,7 @@
         },
         "dependencies": [],
         "ignoreSnapshots": false,
-        "__projectId": ""
+        "__projectId": "e2e"
       }
     ],
     "quiet": false,
@@ -116,19 +140,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 9665,
+                      "duration": 9917,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:35.055Z",
+                      "startTime": "2026-10-15T12:27:34.799Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -136,7 +160,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "ceb0bea1dd12be5aadb7-c811ae5fa4d8d0f03947",
+              "id": "ceb0bea1dd12be5aadb7-c7d95d9f33da40c37097",
               "file": "cart.spec.js",
               "line": 13,
               "column": 3
@@ -150,19 +174,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6268,
+                      "duration": 4766,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:46.368Z",
+                      "startTime": "2026-10-15T12:27:46.404Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -170,7 +194,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "ceb0bea1dd12be5aadb7-29cf0397c703305955c9",
+              "id": "ceb0bea1dd12be5aadb7-16545510f3378e34c860",
               "file": "cart.spec.js",
               "line": 28,
               "column": 3
@@ -184,19 +208,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4338,
+                      "duration": 4105,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:53.499Z",
+                      "startTime": "2026-10-15T12:27:51.442Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -204,7 +228,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "ceb0bea1dd12be5aadb7-695180c864ffdd9b229a",
+              "id": "ceb0bea1dd12be5aadb7-5d1b621a4c5dd2f4ead5",
               "file": "cart.spec.js",
               "line": 42,
               "column": 3
@@ -218,19 +242,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 10111,
+                      "duration": 3021,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:58.186Z",
+                      "startTime": "2026-10-15T12:27:55.663Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -238,7 +262,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "ceb0bea1dd12be5aadb7-dcd7c6cc06f42f3f1c83",
+              "id": "ceb0bea1dd12be5aadb7-c43e2f5b68fd31b9f67d",
               "file": "cart.spec.js",
               "line": 55,
               "column": 3
@@ -255,34 +279,69 @@
       "specs": [
         {
           "title": "user can add a food item on Home and see it in Cart",
-          "ok": true,
+          "ok": false,
           "tags": [],
           "tests": [
             {
               "timeout": 30000,
               "annotations": [],
               "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
+              "projectId": "e2e",
+              "projectName": "e2e",
               "results": [
                 {
                   "workerIndex": 1,
                   "parallelIndex": 1,
-                  "status": "passed",
-                  "duration": 12707,
-                  "errors": [],
+                  "status": "failed",
+                  "duration": 26164,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n\n    at D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js:24:5",
+                    "location": {
+                      "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
+                      "column": 5,
+                      "line": 24
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 23 |\u001b[39m     page\u001b[33m.\u001b[39mlocator(\u001b[32m'.cart-item'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m dishName })\u001b[33m.\u001b[39mfirst()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 26 |\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
+                        "column": 5,
+                        "line": 24
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n\n\n\u001b[0m \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 23 |\u001b[39m     page\u001b[33m.\u001b[39mlocator(\u001b[32m'.cart-item'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m dishName })\u001b[33m.\u001b[39mfirst()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 26 |\u001b[39m\u001b[0m\n\u001b[2m    at D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js:24:5\u001b[22m"
+                    }
+                  ],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T12:39:34.262Z",
+                  "startTime": "2026-10-15T12:27:34.133Z",
                   "annotations": [],
-                  "attachments": []
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\test-results\\home-to-cart-user-can-add--bb9da--on-Home-and-see-it-in-Cart-e2e\\test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\test-results\\home-to-cart-user-can-add--bb9da--on-Home-and-see-it-in-Cart-e2e\\error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
+                    "column": 5,
+                    "line": 24
+                  }
                 }
               ],
-              "status": "expected"
+              "status": "unexpected"
             }
           ],
-          "id": "4c09ac427b0287b72814-cedc2422f8fc63b73c48",
+          "id": "4c09ac427b0287b72814-7580b23f271ffbda123d",
           "file": "home-to-cart.spec.js",
           "line": 4,
           "column": 1
@@ -304,19 +363,19 @@
               "timeout": 30000,
               "annotations": [],
               "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
+              "projectId": "e2e",
+              "projectName": "e2e",
               "results": [
                 {
                   "workerIndex": 2,
                   "parallelIndex": 2,
                   "status": "passed",
-                  "duration": 8792,
+                  "duration": 8873,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-10-14T12:39:34.184Z",
+                  "startTime": "2026-10-15T12:27:34.148Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -324,60 +383,8 @@
               "status": "expected"
             }
           ],
-          "id": "cf4ffee829137744e3cd-e2047989c992015020f4",
+          "id": "cf4ffee829137744e3cd-2ac47727bd82085e5d93",
           "file": "homepage.spec.js",
-          "line": 4,
-          "column": 1
-        }
-      ]
-    },
-    {
-      "title": "homepage.visual.spec.js",
-      "file": "homepage.visual.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "Food Delivery Homepage visual test",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "",
-              "projectName": "",
-              "results": [
-                {
-                  "workerIndex": 4,
-                  "parallelIndex": 4,
-                  "status": "passed",
-                  "duration": 27330,
-                  "errors": [],
-                  "stdout": [
-                    {
-                      "text": "👀 [nlp] NLP is enabled for this account — launching Chromium with a remote-debugging port so eyes.run can attach. Set `eyesConfig.nlpOptions.enabled: false` to opt out.\n"
-                    }
-                  ],
-                  "stderr": [],
-                  "retry": 0,
-                  "steps": [
-                    {
-                      "title": "eyes.check - Food Delivery Homepage",
-                      "duration": 21615
-                    }
-                  ],
-                  "startTime": "2026-10-14T12:39:39.597Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "6431df5a8d37212a3bc9-eb31fb659b1397d0123f",
-          "file": "homepage.visual.spec.js",
           "line": 4,
           "column": 1
         }
@@ -405,19 +412,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 9636,
+                      "duration": 9544,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:34.181Z",
+                      "startTime": "2026-10-15T12:27:34.141Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -425,7 +432,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-129799dc12f83f4ddf6a",
+              "id": "badc1754af1944f68b2b-1860e59c469803cebef1",
               "file": "login.spec.js",
               "line": 41,
               "column": 3
@@ -439,19 +446,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 6350,
+                      "duration": 6234,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:46.419Z",
+                      "startTime": "2026-10-15T12:27:46.012Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -459,7 +466,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-2066512e2bc70b0795ab",
+              "id": "badc1754af1944f68b2b-c5a0d91eb9d9a9c80cd1",
               "file": "login.spec.js",
               "line": 47,
               "column": 3
@@ -473,19 +480,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 5149,
+                      "duration": 4976,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:53.214Z",
+                      "startTime": "2026-10-15T12:27:52.490Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -493,7 +500,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-dc44d5010521490b3462",
+              "id": "badc1754af1944f68b2b-bb3e68cb5b4cbfe69a26",
               "file": "login.spec.js",
               "line": 58,
               "column": 3
@@ -507,19 +514,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 9377,
+                      "duration": 3467,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:39:58.626Z",
+                      "startTime": "2026-10-15T12:27:57.708Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -527,7 +534,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-423fce62cb767263a791",
+              "id": "badc1754af1944f68b2b-11268f5cbf4d9e78ac30",
               "file": "login.spec.js",
               "line": 69,
               "column": 3
@@ -541,19 +548,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 9044,
+                      "duration": 4388,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:08.688Z",
+                      "startTime": "2026-10-15T12:28:01.339Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -561,7 +568,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-add8a77ad34f0b6bd63a",
+              "id": "badc1754af1944f68b2b-8a76f6f99a4642e58ea4",
               "file": "login.spec.js",
               "line": 80,
               "column": 3
@@ -575,19 +582,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 5589,
+                      "duration": 3747,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:18.449Z",
+                      "startTime": "2026-10-15T12:28:05.845Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -595,7 +602,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-c2fe2bc6b469f2216b57",
+              "id": "badc1754af1944f68b2b-079355afa13ca446de43",
               "file": "login.spec.js",
               "line": 88,
               "column": 3
@@ -609,19 +616,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 3973,
+                      "duration": 5903,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:24.480Z",
+                      "startTime": "2026-10-15T12:28:09.643Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -629,7 +636,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-30e9bbbe5fb4e40b0c07",
+              "id": "badc1754af1944f68b2b-49eb9ca4cafdacb94916",
               "file": "login.spec.js",
               "line": 96,
               "column": 3
@@ -643,19 +650,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2670,
+                      "duration": 5023,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:28.519Z",
+                      "startTime": "2026-10-15T12:28:15.603Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -663,7 +670,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-3cc7c85b9c68181b451d",
+              "id": "badc1754af1944f68b2b-b44356f395f319cbd312",
               "file": "login.spec.js",
               "line": 104,
               "column": 3
@@ -677,19 +684,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2133,
+                      "duration": 3312,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:31.274Z",
+                      "startTime": "2026-10-15T12:28:20.733Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -697,7 +704,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-6fbd9bcac5a5bbe8a3bb",
+              "id": "badc1754af1944f68b2b-e09ea8ae1b39ae926862",
               "file": "login.spec.js",
               "line": 113,
               "column": 3
@@ -711,19 +718,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
+                  "projectId": "e2e",
+                  "projectName": "e2e",
                   "results": [
                     {
                       "workerIndex": 3,
                       "parallelIndex": 3,
                       "status": "passed",
-                      "duration": 2898,
+                      "duration": 3787,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-14T12:40:33.500Z",
+                      "startTime": "2026-10-15T12:28:24.090Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -731,150 +738,9 @@
                   "status": "expected"
                 }
               ],
-              "id": "badc1754af1944f68b2b-cdb6630b1c03d67af335",
+              "id": "badc1754af1944f68b2b-b80eb9efc6bc74e63346",
               "file": "login.spec.js",
               "line": 118,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "pages.visual.spec.js",
-      "file": "pages.visual.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Food Delivery Visual Regression",
-          "file": "pages.visual.spec.js",
-          "line": 5,
-          "column": 6,
-          "specs": [
-            {
-              "title": "Food listing visual test",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 27374,
-                      "errors": [],
-                      "stdout": [
-                        {
-                          "text": "👀 [nlp] NLP is enabled for this account — launching Chromium with a remote-debugging port so eyes.run can attach. Set `eyesConfig.nlpOptions.enabled: false` to opt out.\n"
-                        }
-                      ],
-                      "stderr": [],
-                      "retry": 0,
-                      "steps": [
-                        {
-                          "title": "eyes.check - Food Listing",
-                          "duration": 22057
-                        }
-                      ],
-                      "startTime": "2026-10-14T12:39:39.487Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6b346ae701bcd21039cf-87df58836a6b26a8bd7d",
-              "file": "pages.visual.spec.js",
-              "line": 6,
-              "column": 3
-            },
-            {
-              "title": "Cart page visual test",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 25061,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "steps": [
-                        {
-                          "title": "eyes.check - Cart Page",
-                          "duration": 1072
-                        }
-                      ],
-                      "startTime": "2026-10-14T12:40:22.247Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6b346ae701bcd21039cf-83312bb3061ccfaf78eb",
-              "file": "pages.visual.spec.js",
-              "line": 18,
-              "column": 3
-            },
-            {
-              "title": "Checkout page visual test",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "",
-                  "projectName": "",
-                  "results": [
-                    {
-                      "workerIndex": 5,
-                      "parallelIndex": 5,
-                      "status": "passed",
-                      "duration": 2864,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "steps": [
-                        {
-                          "title": "eyes.check - Checkout Page",
-                          "duration": 1256
-                        }
-                      ],
-                      "startTime": "2026-10-14T12:40:47.851Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "6b346ae701bcd21039cf-4f090a97a6ba490fcfba",
-              "file": "pages.visual.spec.js",
-              "line": 29,
               "column": 3
             }
           ]
@@ -884,11 +750,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-14T12:39:18.563Z",
-    "duration": 97633.18400000001,
-    "expected": 20,
+    "startTime": "2026-10-15T12:27:19.624Z",
+    "duration": 69942.783,
+    "expected": 15,
     "skipped": 0,
-    "unexpected": 0,
+    "unexpected": 1,
     "flaky": 0
   }
 }

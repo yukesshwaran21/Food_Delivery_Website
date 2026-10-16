@@ -12,9 +12,11 @@
   "test": "vitest",
   "test:unit": "vitest run --config vitest.unit.config.js",
   "test:integration": "vitest run --config vitest.integration.config.js",
-  "test:e2e": "playwright test",
+  "test:e2e": "playwright test --project=e2e",
+  "test:e2e:visual": "playwright test --project=visual",
   "test:regression": "npm run test:unit && npm run test:integration && npm run test:e2e",
-  "test:generate": "node scripts/generate-tests.js"
+  "test:generate": "node scripts/generate-tests.js",
+  "security:semgrep": "semgrep scan --config auto --error ..\\admin ..\\backend ."
 },
   "dependencies": {
     "@google/genai": "^2.29.1",

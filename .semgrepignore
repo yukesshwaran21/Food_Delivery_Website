@@ -1,0 +1,13 @@
+# Installed dependencies
+**/node_modules/
+
+# Build and test output
+**/dist/
+**/build/
+**/coverage/
+**/playwright-report/
+**/test-results/
+
+# Local tooling and generated assets
+.git/
+**/.vite/

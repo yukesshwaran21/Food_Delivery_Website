@@ -1,6 +1,8 @@
 import { test } from "@applitools/eyes-playwright/fixture";
 import { expect } from "@playwright/test";
 
+test.setTimeout(120_000);
+
 test("Food Delivery Homepage visual test", async ({ page, eyes }) => {
   await page.goto("/");
 

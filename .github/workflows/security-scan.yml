@@ -19,4 +19,19 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Scan source code
-        run: semgrep scan --config auto --error frontend backend
+        run: |
+          semgrep scan \
+            --config auto \
+            --sarif \
+            --sarif-output semgrep.sarif \
+            --error \
+            admin backend frontend
+
+      - name: Upload Semgrep report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep.sarif
+          if-no-files-found: warn
+          retention-days: 7

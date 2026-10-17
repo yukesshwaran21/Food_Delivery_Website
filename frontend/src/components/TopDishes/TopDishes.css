@@ -216,6 +216,36 @@
   transform: translateY(-2px);
 }
 
+.ui-breaker-toggle {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  z-index: 1100;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  transform: translateX(-50%);
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  font: 12px/1.2 system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.ui-breaker-toggle a {
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: #374151;
+  text-decoration: none;
+}
+
+.ui-breaker-toggle a.active {
+  background: #fff;
+  color: #111827;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

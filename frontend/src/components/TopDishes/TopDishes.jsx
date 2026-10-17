@@ -6,12 +6,79 @@ import { useInView } from 'react-intersection-observer';
 import axios from 'axios';
 import CategorySelector from '../CategorySelector/CategorySelector';
 
+const worstCaseFoods = [
+  {
+    _id: 'worst-long-name',
+    name: 'Aleksandra Wiśniewska-Kowalczyk’s Saffron Seafood Risotto with Caramelized Fennel and Lemon',
+    description: 'A realistic long description with diacritics, tall characters, and enough detail to test the two-line card clamp without relying on nonsense text.',
+    price: 1284.99,
+    image: '',
+    category: 'Pasta',
+  },
+  {
+    _id: 'worst-long-description',
+    name: 'Jo',
+    description: 'A creamy seasonal bowl with roasted garlic, hand-cut vegetables, toasted seeds, fresh herbs, house-made dressing, and optional substitutions for common allergens.',
+    price: 1,
+    image: 'missing-food-image.webp',
+    category: 'Salad',
+  },
+  {
+    _id: 'worst-unbounded-text',
+    name: 'Pad Thai',
+    description: 'Gluten-free noodles with a sauce made from tamarind, peanuts, lime, bean sprouts, and chili.',
+    price: 0,
+    image: 'https://images.example.com/food/this-is-a-deliberately-long-but-plausible-food-image-file-name-v12-final.webp',
+    category: 'Noodles',
+  },
+  {
+    _id: 'worst-short-name',
+    name: 'À',
+    description: '',
+    price: 999999.99,
+    image: 'not-a-valid-image',
+    category: 'Cake',
+  },
+  {
+    _id: 'worst-special-chars',
+    name: 'Súp đậu xanh ไทย',
+    description: 'A dish name containing Vietnamese diacritics and Thai script to check clipping and line-height.',
+    price: 12.5,
+    image: 'food_5.png',
+    category: 'Vegetable',
+  },
+  {
+    _id: 'worst-missing-fields',
+    name: 'Sandwich',
+    description: null,
+    price: null,
+    image: null,
+    category: 'Sandwich',
+  },
+];
+
+const getFixture = (mode, demoData) => {
+  if (mode === 'demo') return demoData;
+  if (mode === 'empty') return [];
+  if (mode === 'one') return [worstCaseFoods[0]];
+  if (mode === '1000') return Array.from({ length: 1000 }, (_, index) => ({
+    ...worstCaseFoods[index % worstCaseFoods.length],
+    _id: `worst-row-${index + 1}`,
+    name: `${worstCaseFoods[index % worstCaseFoods.length].name} ${index + 1}`,
+  }));
+  return worstCaseFoods;
+};
+
 const TopDishes = ({ category, setCategory }) => {
   const { url } = useContext(StoreContext);
   const [topDishes, setTopDishes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [categoryChanging, setCategoryChanging] = useState(false);
   const [error, setError] = useState(null);
+  const isDev = import.meta.env.DEV;
+  const dataMode = isDev
+    ? new URLSearchParams(window.location.search).get('data') || 'demo'
+    : 'demo';
   
   // Use Intersection Observer for scroll animations
   const { ref, inView } = useInView({
@@ -26,6 +93,11 @@ const TopDishes = ({ category, setCategory }) => {
         setCategoryChanging(true);
         setIsLoading(true);
         setError(null);
+
+        if (dataMode !== 'demo') {
+          setTopDishes(getFixture(dataMode, []));
+          return;
+        }
         
         // Direct API call to get food items
         const response = await axios.get(`${url}/api/food/list`);
@@ -46,7 +118,7 @@ const TopDishes = ({ category, setCategory }) => {
             .sort(() => 0.5 - Math.random())
             .slice(0, 6); // Show top 6 dishes
           
-          setTopDishes(sorted);
+          setTopDishes(getFixture(dataMode, sorted));
         } else {
           setError("Could not fetch food items");
           console.error("API Error:", response.data.message);
@@ -61,7 +133,7 @@ const TopDishes = ({ category, setCategory }) => {
     };
     
     fetchTopDishes();
-  }, [category, url]);
+  }, [category, dataMode, url]);
 
   return (
     <section className="top-dishes-section" id="dishes">
@@ -119,6 +191,26 @@ const TopDishes = ({ category, setCategory }) => {
           </div>
         )}
       </div>
+      {isDev && (
+        <nav className="ui-breaker-toggle" aria-label="Data fixture">
+          {[
+            ['demo', 'Demo data'],
+            ['worst', 'Worst case'],
+            ['empty', 'Empty'],
+            ['one', 'One'],
+            ['1000', '1,000 rows'],
+          ].map(([mode, label]) => (
+            <a
+              key={mode}
+              href={`?data=${mode}`}
+              className={dataMode === mode ? 'active' : ''}
+              aria-current={dataMode === mode ? 'page' : undefined}
+            >
+              {label}
+            </a>
+          ))}
+        </nav>
+      )}
     </section>
   );
 };

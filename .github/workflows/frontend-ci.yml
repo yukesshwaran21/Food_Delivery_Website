@@ -42,53 +42,23 @@ jobs:
 
       - name: Run ESLint
         id: lint
-        continue-on-error: true
-        run: |
-          set +e
-          npm run lint 2>&1 | tee test-results/ci/lint.log
-          status=${PIPESTATUS[0]}
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run lint 2>&1 | tee test-results/ci/lint.log
 
       - name: Run Unit Tests
         id: unit
-        continue-on-error: true
-        run: |
-          set +e
-          npm run test:unit 2>&1 | tee test-results/ci/unit.log
-          status=${PIPESTATUS[0]}
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run test:unit 2>&1 | tee test-results/ci/unit.log
 
       - name: Run Integration Tests
         id: integration
-        continue-on-error: true
-        run: |
-          set +e
-          npm run test:integration 2>&1 | tee test-results/ci/integration.log
-          status=${PIPESTATUS[0]}
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run test:integration 2>&1 | tee test-results/ci/integration.log
 
       - name: Run End-to-End Tests
         id: e2e
-        continue-on-error: true
-        run: |
-          set +e
-          npm run test:e2e 2>&1 | tee test-results/ci/e2e.log
-          status=${PIPESTATUS[0]}
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run test:e2e 2>&1 | tee test-results/ci/e2e.log
 
       - name: Build Frontend
         id: build
-        continue-on-error: true
-        run: |
-          set +e
-          npm run build 2>&1 | tee test-results/ci/build.log
-          status=${PIPESTATUS[0]}
-          echo "exit_code=$status" >> "$GITHUB_OUTPUT"
-          exit 0
+        run: npm run build 2>&1 | tee test-results/ci/build.log
 
       - name: Upload Quality Check and AI Reports
         if: ${{ always() }}
@@ -97,4 +67,57 @@ jobs:
           name: quality-check-and-ai-reports
           path: |
             frontend/test-results/ci/
+            frontend/test-results/results.json
           if-no-files-found: warn
+
+  ollama-failure-report:
+    name: Report failed checks with Ollama
+    needs: quality-checks
+    if: ${{ always() && needs.quality-checks.result == 'failure' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download quality check logs
+        uses: actions/download-artifact@v4
+        with:
+          name: quality-check-and-ai-reports
+          path: frontend/test-results
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Ollama
+        run: curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama
+        run: |
+          ollama serve > "$RUNNER_TEMP/ollama.log" 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:11434/api/tags > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          cat "$RUNNER_TEMP/ollama.log"
+          exit 1
+
+      - name: Download Ollama model
+        run: ollama pull qwen2.5:1.5b
+
+      - name: Generate Ollama failure report
+        working-directory: frontend
+        env:
+          OLLAMA_URL: http://127.0.0.1:11434
+          OLLAMA_MODEL: qwen2.5:1.5b
+        run: node scripts/report-ci-failures.js
+
+      - name: Print Ollama failure report
+        run: cat frontend/test-results/ci/ollama-failure-report.md
+
+      - name: Upload Ollama failure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: ollama-ci-failure-report
+          path: frontend/test-results/ci/ollama-failure-report.md

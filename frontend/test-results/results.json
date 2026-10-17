@@ -4,7 +4,8 @@
       "C:\\Program Files\\nodejs\\node.exe",
       "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\node_modules\\@playwright\\test\\cli.js",
       "test",
-      "--project=e2e"
+      "--project=e2e",
+      "tests/login.spec.js"
     ],
     "configFile": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\playwright.config.js",
     "rootDir": "D:/Food_delivery/Food_Delivery_Website/frontend/tests",
@@ -18,7 +19,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 4
+      "actualWorkers": 1
     },
     "preserveOutput": "always",
     "projects": [
@@ -27,7 +28,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "e2e",
         "name": "e2e",
@@ -46,7 +47,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "id": "visual",
         "name": "visual",
@@ -67,7 +68,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 4
+          "actualWorkers": 1
         },
         "name": "e2e",
         "testDir": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests",
@@ -119,278 +120,6 @@
   },
   "suites": [
     {
-      "title": "cart.spec.js",
-      "file": "cart.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "Shopping Cart",
-          "file": "cart.spec.js",
-          "line": 8,
-          "column": 6,
-          "specs": [
-            {
-              "title": "should add a food item to the cart and update quantity and total price",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "e2e",
-                  "projectName": "e2e",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 9917,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-15T12:27:34.799Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "ceb0bea1dd12be5aadb7-c7d95d9f33da40c37097",
-              "file": "cart.spec.js",
-              "line": 13,
-              "column": 3
-            },
-            {
-              "title": "should update total price when increasing item quantity",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "e2e",
-                  "projectName": "e2e",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4766,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-15T12:27:46.404Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "ceb0bea1dd12be5aadb7-16545510f3378e34c860",
-              "file": "cart.spec.js",
-              "line": 28,
-              "column": 3
-            },
-            {
-              "title": "should remove an item from the cart",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "e2e",
-                  "projectName": "e2e",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 4105,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-15T12:27:51.442Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "ceb0bea1dd12be5aadb7-5d1b621a4c5dd2f4ead5",
-              "file": "cart.spec.js",
-              "line": 42,
-              "column": 3
-            },
-            {
-              "title": "negative/boundary: cart should not display incorrect total when quantity changes rapidly or reaches zero",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "e2e",
-                  "projectName": "e2e",
-                  "results": [
-                    {
-                      "workerIndex": 0,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 3021,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-10-15T12:27:55.663Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "ceb0bea1dd12be5aadb7-c43e2f5b68fd31b9f67d",
-              "file": "cart.spec.js",
-              "line": 55,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "home-to-cart.spec.js",
-      "file": "home-to-cart.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "user can add a food item on Home and see it in Cart",
-          "ok": false,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "e2e",
-              "projectName": "e2e",
-              "results": [
-                {
-                  "workerIndex": 1,
-                  "parallelIndex": 1,
-                  "status": "failed",
-                  "duration": 26164,
-                  "error": {
-                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n",
-                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n\n    at D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js:24:5",
-                    "location": {
-                      "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
-                      "column": 5,
-                      "line": 24
-                    },
-                    "snippet": "\u001b[0m \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 23 |\u001b[39m     page\u001b[33m.\u001b[39mlocator(\u001b[32m'.cart-item'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m dishName })\u001b[33m.\u001b[39mfirst()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 26 |\u001b[39m\u001b[0m"
-                  },
-                  "errors": [
-                    {
-                      "location": {
-                        "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
-                        "column": 5,
-                        "line": 24
-                      },
-                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m(\u001b[22m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\nExpected: visible\nTimeout: 15000ms\nError: element(s) not found\n\nCall log:\n\u001b[2m  - Expect \"toBeVisible\" locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first() with timeout 15000ms\u001b[22m\n\u001b[2m  - waiting for locator('.cart-item').filter({ hasText: 'Mediterranean Quinoa Salad' }).first()\u001b[22m\n\n\n\u001b[0m \u001b[90m 22 |\u001b[39m   \u001b[36mawait\u001b[39m expect(\n \u001b[90m 23 |\u001b[39m     page\u001b[33m.\u001b[39mlocator(\u001b[32m'.cart-item'\u001b[39m)\u001b[33m.\u001b[39mfilter({ hasText\u001b[33m:\u001b[39m dishName })\u001b[33m.\u001b[39mfirst()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 24 |\u001b[39m   )\u001b[33m.\u001b[39mtoBeVisible({ timeout\u001b[33m:\u001b[39m \u001b[35m15000\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m     \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 25 |\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m 26 |\u001b[39m\u001b[0m\n\u001b[2m    at D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js:24:5\u001b[22m"
-                    }
-                  ],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-15T12:27:34.133Z",
-                  "annotations": [],
-                  "attachments": [
-                    {
-                      "name": "screenshot",
-                      "contentType": "image/png",
-                      "path": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\test-results\\home-to-cart-user-can-add--bb9da--on-Home-and-see-it-in-Cart-e2e\\test-failed-1.png"
-                    },
-                    {
-                      "name": "error-context",
-                      "contentType": "text/markdown",
-                      "path": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\test-results\\home-to-cart-user-can-add--bb9da--on-Home-and-see-it-in-Cart-e2e\\error-context.md"
-                    }
-                  ],
-                  "errorLocation": {
-                    "file": "D:\\Food_delivery\\Food_Delivery_Website\\frontend\\tests\\home-to-cart.spec.js",
-                    "column": 5,
-                    "line": 24
-                  }
-                }
-              ],
-              "status": "unexpected"
-            }
-          ],
-          "id": "4c09ac427b0287b72814-7580b23f271ffbda123d",
-          "file": "home-to-cart.spec.js",
-          "line": 4,
-          "column": 1
-        }
-      ]
-    },
-    {
-      "title": "homepage.spec.js",
-      "file": "homepage.spec.js",
-      "column": 0,
-      "line": 0,
-      "specs": [
-        {
-          "title": "homepage should load successfully",
-          "ok": true,
-          "tags": [],
-          "tests": [
-            {
-              "timeout": 30000,
-              "annotations": [],
-              "expectedStatus": "passed",
-              "projectId": "e2e",
-              "projectName": "e2e",
-              "results": [
-                {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
-                  "status": "passed",
-                  "duration": 8873,
-                  "errors": [],
-                  "stdout": [],
-                  "stderr": [],
-                  "retry": 0,
-                  "startTime": "2026-10-15T12:27:34.148Z",
-                  "annotations": [],
-                  "attachments": []
-                }
-              ],
-              "status": "expected"
-            }
-          ],
-          "id": "cf4ffee829137744e3cd-2ac47727bd82085e5d93",
-          "file": "homepage.spec.js",
-          "line": 4,
-          "column": 1
-        }
-      ]
-    },
-    {
       "title": "login.spec.js",
       "file": "login.spec.js",
       "column": 0,
@@ -416,15 +145,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 9544,
+                      "duration": 3389,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:27:34.141Z",
+                      "startTime": "2026-10-16T15:32:39.736Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -450,15 +179,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6234,
+                      "duration": 2696,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:27:46.012Z",
+                      "startTime": "2026-10-16T15:32:43.895Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -484,15 +213,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4976,
+                      "duration": 2111,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:27:52.490Z",
+                      "startTime": "2026-10-16T15:32:46.654Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -518,15 +247,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3467,
+                      "duration": 2620,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:27:57.708Z",
+                      "startTime": "2026-10-16T15:32:48.793Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -552,15 +281,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4388,
+                      "duration": 2019,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:01.339Z",
+                      "startTime": "2026-10-16T15:32:51.437Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -586,15 +315,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3747,
+                      "duration": 1889,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:05.845Z",
+                      "startTime": "2026-10-16T15:32:53.481Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -620,15 +349,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5903,
+                      "duration": 1985,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:09.643Z",
+                      "startTime": "2026-10-16T15:32:55.389Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -654,15 +383,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5023,
+                      "duration": 2081,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:15.603Z",
+                      "startTime": "2026-10-16T15:32:57.393Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -688,15 +417,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3312,
+                      "duration": 2186,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:20.733Z",
+                      "startTime": "2026-10-16T15:32:59.499Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -722,15 +451,15 @@
                   "projectName": "e2e",
                   "results": [
                     {
-                      "workerIndex": 3,
-                      "parallelIndex": 3,
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3787,
+                      "duration": 2866,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-10-15T12:28:24.090Z",
+                      "startTime": "2026-10-16T15:33:01.714Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -750,11 +479,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-15T12:27:19.624Z",
-    "duration": 69942.783,
-    "expected": 15,
+    "startTime": "2026-10-16T15:32:34.341Z",
+    "duration": 31472.951999999997,
+    "expected": 10,
     "skipped": 0,
-    "unexpected": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

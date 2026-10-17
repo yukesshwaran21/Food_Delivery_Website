@@ -58,6 +58,9 @@
     "chatInstructions": [
       {
         "path": "./.agents/rules/testing-requirements.md"
+      },
+      {
+        "path": "./.agents/skills/coding-standards/SKILL.md"
       }
     ]
   }

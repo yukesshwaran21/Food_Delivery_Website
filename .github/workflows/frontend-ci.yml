@@ -33,6 +33,9 @@ jobs:
         working-directory: backend
         run: npm ci
 
+      - name: Prepare diagnostic directory
+        run: mkdir -p test-results/ci
+
       - name: Run ESLint
         id: lint
         run: npm run lint 2>&1 | tee test-results/ci/lint.log
